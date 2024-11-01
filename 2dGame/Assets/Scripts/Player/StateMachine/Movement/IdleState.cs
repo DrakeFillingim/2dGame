@@ -5,30 +5,34 @@ public class IdleState : State
 {
     public override void OnStart()
     {
-        _inputMap["Move"].performed += OnMove;
-        Debug.Log("controller: " + _controller);
+
     }
 
     public override void OnUpdate()
     {
-        Debug.Log("In Idle");
+        Debug.Log("in idle");
     }
 
     public override void OnFixedUpdate()
     {
-
+        
     }
 
     public override void OnExit()
     {
-        _inputMap["Move"].performed -= OnMove;
+
     }
 
-    private void OnMove(InputAction.CallbackContext context)
+    protected override void OnMove(InputAction.CallbackContext context)
     {
         if (context.ReadValue<float>() != 0)
         {
             _controller.AddStateToQueue(new StateQueueData(new WalkState(), 0));
         }
+    }
+
+    protected override void OnJump(InputAction.CallbackContext context)
+    {
+        _controller.AddStateToQueue(new StateQueueData(new JumpState(), 0));
     }
 }

@@ -10,13 +10,17 @@ public class StateController : MonoBehaviour
     private const int StateQueueLimit = 8;
     private static readonly Dictionary<Type, Type[]> StateMap = new()
     {
-        { typeof(IdleState), new Type[] {typeof(WalkState)} },
-        { typeof(WalkState), new Type[] {typeof(IdleState)} },
-        { typeof(JumpState), new Type[] {} }
+        { typeof(FallState), new Type[] {typeof(IdleState), typeof(JumpState), typeof(DashState) } },
+        { typeof(IdleState), new Type[] {typeof(FallState), typeof(JumpState), typeof(DashState), typeof(WalkState), typeof(CrouchState), typeof(LightAttackState) } },
+        { typeof(JumpState), new Type[] {typeof(FallState), typeof(JumpState), typeof(DashState) } },
+        { typeof(DashState), new Type[] {typeof(FallState), typeof(IdleState), typeof(JumpState), typeof(WalkState), typeof(RunState), typeof(SlideState) } },
+        { typeof(WalkState), new Type[] {typeof(FallState), typeof(IdleState), typeof(JumpState), typeof(DashState), typeof(CrouchState), typeof(RunState), typeof(LightAttackState) } },
+        { typeof(CrouchState), new Type[] { typeof(FallState), typeof(IdleState), typeof(WalkState) } },
+        { typeof(RunState), new Type[] { typeof(FallState), typeof(IdleState), typeof(JumpState), typeof(DashState), typeof(WalkState), typeof(SlideState) } },
+        { typeof(SlideState), new Type[] { typeof(JumpState), typeof(RunState), typeof(CrouchState) } },
     };
 
     private List<StateQueueData> _stateQueue = new(StateQueueLimit);
-    
     private OverwritableStack<State> _previousStates = new();
     private State _currentState;
 
@@ -24,13 +28,9 @@ public class StateController : MonoBehaviour
     {
         GameObject.Find("InputHandler").GetComponent<PlayerInput>().actions.FindActionMap("Player")["Reset"].performed += _ => SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         _currentState = new IdleState();
-        _currentState.Initialize();
+        _currentState.Initialize(gameObject);
+        _currentState.ConnectEvents();
         _currentState.OnStart();
-    }
-
-    private void FixedUpdate()
-    {
-        _currentState.OnFixedUpdate();
     }
 
     private void Update()
@@ -39,8 +39,21 @@ public class StateController : MonoBehaviour
         ReadStateQueue();
     }
 
+    private void FixedUpdate()
+    {
+        _currentState.OnFixedUpdate();
+    }
+
+    private void OnDisable()
+    {
+        _currentState.DisconnectEvents();
+        _currentState.OnExit();
+    }
+
+
     /// <summary>
-    /// Pushes a state the end the of the player's state queue
+    /// Pushes a state the end the of the player's state queue. 
+    /// The state is ignored if the player already has 8 items in queue.
     /// </summary>
     /// <param name="toAdd"></param>
     public void AddStateToQueue(StateQueueData toAdd)
@@ -67,7 +80,6 @@ public class StateController : MonoBehaviour
             StateQueueData data = _reversedQueue[i];
             if (StateMap[_currentState.GetType()].Contains(data.TransitionState.GetType()))
             {
-                print("transitioned from " + _currentState.GetType() + " to " + data.TransitionState.GetType());
                 SetState(data.TransitionState);
                 _stateQueue.RemoveAt(_stateQueue.Count - 1 - i);
                 break;
@@ -85,9 +97,11 @@ public class StateController : MonoBehaviour
     /// <param name="toSet"></param>
     private void SetState(State toSet)
     {
+        _currentState.DisconnectEvents();
         _currentState.OnExit();
         _previousStates.Push(_currentState);
         _currentState = toSet;
+        _currentState.ConnectEvents();
         _currentState.OnStart();
     }
 }

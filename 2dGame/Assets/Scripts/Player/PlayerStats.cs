@@ -26,5 +26,4 @@ public class PlayerStats : MonoBehaviour
 
     public float GravityScale { get; set; } = 30;
     public Vector2 GravityDirection { get; set; } = Vector2.down;
-
 }

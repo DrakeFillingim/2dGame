@@ -7,8 +7,18 @@ public class IdleState : State
     {
         if (_inputMap["Move"].IsPressed())
         {
-            _controller.AddStateToQueue(new StateQueueData(new WalkState(), 0));
+            if (_inputMap["Run"].inProgress)
+            {
+                _controller.AddStateToQueue(new StateQueueData(new RunState(), 0));
+            }
+            else
+            {
+                _controller.AddStateToQueue(new StateQueueData(new WalkState(), 0));
+            }
         }
+
+        _inputMap["Dash"].performed += _ => Debug.Log("dash started");
+        _inputMap["Run"].performed += _ => Debug.Log("run performed");
     }
 
     public override void OnUpdate()
@@ -38,7 +48,14 @@ public class IdleState : State
     {
         if (context.ReadValue<float>() != 0)
         {
-            _controller.AddStateToQueue(new StateQueueData(new WalkState(), 0));
+            if (_inputMap["Run"].inProgress)
+            {
+                _controller.AddStateToQueue(new StateQueueData(new RunState(), 0));
+            }
+            else
+            {
+                _controller.AddStateToQueue(new StateQueueData(new WalkState(), 0));
+            }
         }
     }
 

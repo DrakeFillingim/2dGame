@@ -29,11 +29,6 @@ public class JumpAttackState : State
         _renderer.color = Color.white;
     }
 
-    protected override void OnJump(InputAction.CallbackContext context)
-    {
-        _controller.AddStateToQueue(new StateQueueData(new JumpState(), .5f));
-    }
-
     private static void OnAttackEnd()
     {
         if (MovementHelper.IsGrounded(_player, _stats.GravityDirection))
@@ -42,5 +37,20 @@ public class JumpAttackState : State
             return;
         }
         _controller.AddStateToQueue(new StateQueueData(new FallState(), 0));
+    }
+
+    protected override void OnJump(InputAction.CallbackContext context)
+    {
+        _controller.AddStateToQueue(new StateQueueData(new JumpState(), .3f));
+    }
+
+    protected override void OnRunStarted(InputAction.CallbackContext context)
+    {
+        _stats.MovementSpeed = RunState.RunSpeed;
+    }
+
+    protected override void OnRunCanceled(InputAction.CallbackContext context)
+    {
+        _stats.MovementSpeed = WalkState.WalkSpeed;
     }
 }

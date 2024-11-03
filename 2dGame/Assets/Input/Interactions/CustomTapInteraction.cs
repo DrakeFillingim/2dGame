@@ -6,8 +6,10 @@ using UnityEngine.InputSystem;
 [InitializeOnLoad]
 #endif
 
-public class LightAttackInteraction : IInputInteraction
+public class CustomTapInteraction : IInputInteraction
 {
+    public float TapTime = 0.2f;
+
     public void Process(ref InputInteractionContext context)
     {
         if (context.timerHasExpired)
@@ -32,9 +34,9 @@ public class LightAttackInteraction : IInputInteraction
 
     }
 
-    static LightAttackInteraction()
+    static CustomTapInteraction()
     {
-        InputSystem.RegisterInteraction<LightAttackInteraction>();
+        InputSystem.RegisterInteraction<CustomTapInteraction>();
     }
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]

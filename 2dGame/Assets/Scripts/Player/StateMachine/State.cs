@@ -51,10 +51,11 @@ public abstract class State
         _inputMap["Dash"].performed += OnDash;
         _inputMap["Move"].performed += OnMove;
         _inputMap["Crouch"].performed += OnCrouch;
+        _inputMap["Run"].started += OnRunStarted;
+        _inputMap["Run"].canceled += OnRunCanceled;
         _inputMap["Attack"].performed += OnAttack;
         _inputMap["ChargeAttack"].started += OnChargeAttackStarted;
     }
-
     /// <summary>
     /// Disconnects the state from all input events to prevent duplicate events
     /// </summary>
@@ -64,6 +65,8 @@ public abstract class State
         _inputMap["Dash"].performed -= OnDash;
         _inputMap["Move"].performed -= OnMove;
         _inputMap["Crouch"].performed -= OnCrouch;
+        _inputMap["Run"].started -= OnRunStarted;
+        _inputMap["Run"].canceled -= OnRunCanceled;
         _inputMap["Attack"].performed -= OnAttack;
         _inputMap["ChargeAttack"].started -= OnChargeAttackStarted;
     }
@@ -89,6 +92,16 @@ public abstract class State
     }
 
     protected virtual void OnCrouch(InputAction.CallbackContext context)
+    {
+
+    }
+
+    protected virtual void OnRunStarted(InputAction.CallbackContext context)
+    {
+
+    }
+
+    protected virtual void OnRunCanceled(InputAction.CallbackContext context)
     {
 
     }

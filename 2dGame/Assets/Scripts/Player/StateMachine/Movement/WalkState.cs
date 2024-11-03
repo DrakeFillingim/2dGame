@@ -42,6 +42,11 @@ public class WalkState : State
         _controller.AddStateToQueue(new StateQueueData(new CrouchState(), 0));
     }
 
+    protected override void OnRunStarted(InputAction.CallbackContext context)
+    {
+        _controller.AddStateToQueue(new StateQueueData(new RunState(), 0));
+    }
+
     protected override void OnAttack(InputAction.CallbackContext context)
     {
         Debug.Log("light attack added to q");

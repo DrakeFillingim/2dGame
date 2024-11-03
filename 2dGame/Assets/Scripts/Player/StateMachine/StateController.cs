@@ -15,7 +15,7 @@ public class StateController : MonoBehaviour
         { typeof(JumpState), new Type[] { typeof(FallState), typeof(JumpState), typeof(DashState) } },
         { typeof(DashState), new Type[] { typeof(FallState), typeof(IdleState), typeof(JumpState), typeof(WalkState), typeof(SlideState), typeof(MovementAttackState) } },
         { typeof(WalkState), new Type[] { typeof(FallState), typeof(IdleState), typeof(JumpState), typeof(DashState), typeof(CrouchState), typeof(RunState), typeof(LightAttackState) } },
-        { typeof(RunState), new Type[] { typeof(FallState), typeof(JumpState), typeof(WalkState), typeof(SlideState) } },
+        { typeof(RunState), new Type[] { typeof(FallState), typeof(IdleState), typeof(JumpState), typeof(WalkState), typeof(SlideState) } },
         { typeof(CrouchState), new Type[] { typeof(FallState), typeof(IdleState), typeof(WalkState), typeof(RunState), typeof(LightAttackState) } },
         { typeof(SlideState), new Type[] { typeof(JumpState), typeof(CrouchState), typeof(MovementAttackState) } },
         { typeof(JumpAttackState), new Type[] {typeof(FallState), typeof(IdleState) } },

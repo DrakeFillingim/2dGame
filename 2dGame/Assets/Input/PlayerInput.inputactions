@@ -6,15 +6,6 @@
             "id": "d17f75e9-a4f1-48f0-9180-3fefb1bfc407",
             "actions": [
                 {
-                    "name": "Move",
-                    "type": "PassThrough",
-                    "id": "ec2c3b1c-f88d-49e9-909d-d4ccc11b015a",
-                    "expectedControlType": "Axis",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Jump",
                     "type": "Button",
                     "id": "023baf6e-410d-4555-b538-deebef178b80",
@@ -28,6 +19,15 @@
                     "type": "Button",
                     "id": "22b52b84-9c9d-4c30-ae53-dbd84fbec776",
                     "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "CustomTap",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Move",
+                    "type": "PassThrough",
+                    "id": "ec2c3b1c-f88d-49e9-909d-d4ccc11b015a",
+                    "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -47,7 +47,7 @@
                     "id": "c86a6f1f-3da9-44ca-94f7-ce9ef3463ac4",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "ChargeHold(TapTime=0.2)",
                     "initialStateCheck": false
                 },
                 {
@@ -74,7 +74,7 @@
                     "id": "4081131e-5192-49d7-95fc-4b869dfda440",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "LightAttack",
+                    "interactions": "CustomTap",
                     "initialStateCheck": false
                 },
                 {
@@ -83,7 +83,7 @@
                     "id": "08be1b49-6a1a-4305-8aad-342a476d1842",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "ChargeAttackStart",
+                    "interactions": "ChargeTimedHold(TapTime=0.2,HoldTime=1)",
                     "initialStateCheck": false
                 }
             ],
@@ -168,7 +168,7 @@
                 {
                     "name": "",
                     "id": "52016e70-42f6-4d18-bb5e-5ffeb0fe7e55",
-                    "path": "<Keyboard>/f",
+                    "path": "<Keyboard>/shift",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

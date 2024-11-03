@@ -8,7 +8,7 @@ public class JumpState : State
     public override void OnStart()
     {
         _rb.velocity = new Vector2(_rb.velocity.x, 0);
-        Debug.Log(Mathf.Sqrt(2 * _stats.GravityScale * _jumpHeight));
+        //Debug.Log(Mathf.Sqrt(2 * _stats.GravityScale * _jumpHeight));
         _rb.AddForce(-_stats.GravityDirection * Mathf.Sqrt(2 * _stats.GravityScale * _jumpHeight), ForceMode2D.Impulse);
     }
 
@@ -33,6 +33,16 @@ public class JumpState : State
     protected override void OnJump(InputAction.CallbackContext context)
     {
         _controller.AddStateToQueue(new StateQueueData(new JumpState(), 0));
+    }
+
+    protected override void OnRunStarted(InputAction.CallbackContext context)
+    {
+        _stats.MovementSpeed = RunState.RunSpeed;
+    }
+
+    protected override void OnRunCanceled(InputAction.CallbackContext context)
+    {
+        _stats.MovementSpeed = WalkState.WalkSpeed;
     }
 
     protected override void OnAttack(InputAction.CallbackContext context)

@@ -28,14 +28,19 @@ public class CrouchState : State
         _player.transform.localScale = new Vector3(_player.transform.localScale.x, _player.transform.localScale.y * 2, _player.transform.localScale.z);
     }
 
+    protected override void OnJump(InputAction.CallbackContext context)
+    {
+        _controller.AddStateToQueue(new StateQueueData(new WalkState(), 0));
+        _controller.AddStateToQueue(new StateQueueData(new JumpState(), Time.deltaTime + 0.1f));
+    }
+
     protected override void OnCrouch(InputAction.CallbackContext context)
     {
         _controller.AddStateToQueue(new StateQueueData(new IdleState(), 0));
     }
 
-    protected override void OnJump(InputAction.CallbackContext context)
+    protected override void OnRunStarted(InputAction.CallbackContext context)
     {
-        _controller.AddStateToQueue(new StateQueueData(new WalkState(), 0));
-        _controller.AddStateToQueue(new StateQueueData(new JumpState(), Time.deltaTime + 0.1f));
+        _controller.AddStateToQueue(new StateQueueData(new RunState(), 0));
     }
 }

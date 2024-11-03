@@ -9,13 +9,13 @@ public class Timer : MonoBehaviour
 
     public System.Action onTimeout;
 
-    public static Timer CreateTimer(GameObject obj, System.Action onTimeout_, float maxTime_, bool autostart_ = false, bool repeatable_ = true)
+    public static Timer CreateTimer(GameObject obj, System.Action onTimeout, float maxTime, bool autostart = false, bool repeatable = true)
     {
         Timer timer = obj.AddComponent<Timer>();
-        timer.onTimeout = onTimeout_;
-        timer.MaxTime = maxTime_;
-        timer.Autostart = autostart_;
-        timer.Repeatable = repeatable_;
+        timer.onTimeout = onTimeout;
+        timer.MaxTime = maxTime;
+        timer.Autostart = autostart;
+        timer.Repeatable = repeatable;
 
         timer.enabled = timer.Autostart;
         return timer;

@@ -7,6 +7,7 @@ public abstract class State
     protected static Rigidbody2D _rb;
     protected static PlayerStats _stats;
     protected static Animator _playerAnimator;
+    protected static SpriteRenderer _renderer;
     protected static InputActionMap _inputMap;
 
     /// <summary>
@@ -20,6 +21,7 @@ public abstract class State
         _rb = player.GetComponent<Rigidbody2D>();
         _stats = player.GetComponent<PlayerStats>();
         _playerAnimator = player.GetComponent<Animator>();
+        _renderer = player.GetComponent<SpriteRenderer>();
         _inputMap = GameObject.Find("InputHandler").GetComponent<PlayerInput>().actions.FindActionMap("Player");
     }
 
@@ -45,11 +47,10 @@ public abstract class State
     /// </summary>
     public void ConnectEvents()
     {
-        _inputMap["Move"].performed += OnMove;
         _inputMap["Jump"].performed += OnJump;
         _inputMap["Dash"].performed += OnDash;
+        _inputMap["Move"].performed += OnMove;
         _inputMap["Crouch"].performed += OnCrouch;
-        _inputMap["Run"].performed += OnRun;
         _inputMap["Attack"].performed += OnAttack;
         _inputMap["ChargeAttack"].started += OnChargeAttackStarted;
     }
@@ -59,11 +60,10 @@ public abstract class State
     /// </summary>
     public void DisconnectEvents()
     {
-        _inputMap["Move"].performed -= OnMove;
         _inputMap["Jump"].performed -= OnJump;
         _inputMap["Dash"].performed -= OnDash;
+        _inputMap["Move"].performed -= OnMove;
         _inputMap["Crouch"].performed -= OnCrouch;
-        _inputMap["Run"].performed -= OnRun;
         _inputMap["Attack"].performed -= OnAttack;
         _inputMap["ChargeAttack"].started -= OnChargeAttackStarted;
     }
@@ -72,11 +72,6 @@ public abstract class State
      * Following methods left empty and intended to be overridden by states,
      * Can be left empty to have no behavior for the given input.
      */
-
-    protected virtual void OnMove(InputAction.CallbackContext context)
-    {
-        
-    }
 
     protected virtual void OnJump(InputAction.CallbackContext context)
     {
@@ -88,12 +83,12 @@ public abstract class State
 
     }
 
-    protected virtual void OnCrouch(InputAction.CallbackContext context)
+    protected virtual void OnMove(InputAction.CallbackContext context)
     {
 
     }
 
-    protected virtual void OnRun(InputAction.CallbackContext context)
+    protected virtual void OnCrouch(InputAction.CallbackContext context)
     {
 
     }

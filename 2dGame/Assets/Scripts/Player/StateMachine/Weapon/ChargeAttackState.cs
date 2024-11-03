@@ -1,10 +1,12 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class RunState : State
+public class ChargeAttack : State
 {
     public override void OnStart()
     {
-        
+        Debug.Log("Started charge attack");
     }
 
     public override void OnUpdate()

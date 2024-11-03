@@ -18,7 +18,7 @@ public class OverwritableStack<T>
     }
 
     /// <summary>
-    /// 
+    /// Add a state to the stack, overwriting the oldest if the number of states exceeds the max.
     /// </summary>
     /// <param name="toAdd"></param>
     public void Push(T toAdd)
@@ -28,7 +28,7 @@ public class OverwritableStack<T>
     }
 
     /// <summary>
-    /// 
+    /// Removes and returns the most recent state added to the stack, or default of the stack is empty.
     /// </summary>
     /// <returns></returns>
     public T Pop()

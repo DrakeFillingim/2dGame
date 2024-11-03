@@ -10,16 +10,19 @@ public class StateController : MonoBehaviour
     private const int StateQueueLimit = 8;
     private static readonly Dictionary<Type, Type[]> StateMap = new()
     {
-        { typeof(FallState), new Type[] {typeof(IdleState), typeof(JumpState), typeof(DashState) } },
-        { typeof(IdleState), new Type[] {typeof(FallState), typeof(JumpState), typeof(DashState), typeof(WalkState), typeof(CrouchState), typeof(LightAttackState) } },
-        { typeof(JumpState), new Type[] {typeof(FallState), typeof(JumpState), typeof(DashState) } },
-        { typeof(DashState), new Type[] {typeof(FallState), typeof(IdleState), typeof(JumpState), typeof(WalkState), typeof(RunState), typeof(SlideState) } },
-        { typeof(WalkState), new Type[] {typeof(FallState), typeof(IdleState), typeof(JumpState), typeof(DashState), typeof(CrouchState), typeof(RunState), typeof(LightAttackState) } },
-        { typeof(CrouchState), new Type[] { typeof(FallState), typeof(IdleState), typeof(WalkState) } },
-        { typeof(RunState), new Type[] { typeof(FallState), typeof(IdleState), typeof(JumpState), typeof(DashState), typeof(WalkState), typeof(SlideState) } },
-        { typeof(SlideState), new Type[] { typeof(JumpState), typeof(RunState), typeof(CrouchState) } },
+        { typeof(FallState), new Type[] { typeof(IdleState), typeof(JumpState), typeof(DashState), typeof(RunState), typeof(JumpAttackState) } },
+        { typeof(IdleState), new Type[] { typeof(FallState), typeof(JumpState), typeof(DashState), typeof(WalkState), typeof(CrouchState), typeof(RunState), typeof(LightAttackState) } },
+        { typeof(JumpState), new Type[] { typeof(FallState), typeof(JumpState), typeof(DashState) } },
+        { typeof(DashState), new Type[] { typeof(FallState), typeof(IdleState), typeof(JumpState), typeof(WalkState), typeof(SlideState), typeof(MovementAttackState) } },
+        { typeof(WalkState), new Type[] { typeof(FallState), typeof(IdleState), typeof(JumpState), typeof(DashState), typeof(CrouchState), typeof(RunState), typeof(LightAttackState) } },
+        { typeof(RunState), new Type[] { typeof(FallState), typeof(JumpState), typeof(WalkState), typeof(SlideState) } },
+        { typeof(CrouchState), new Type[] { typeof(FallState), typeof(IdleState), typeof(WalkState), typeof(RunState), typeof(LightAttackState) } },
+        { typeof(SlideState), new Type[] { typeof(JumpState), typeof(CrouchState), typeof(MovementAttackState) } },
+        { typeof(JumpAttackState), new Type[] {typeof(FallState), typeof(IdleState) } },
+        { typeof(LightAttackState), new Type[] {typeof(IdleState), typeof(LightAttackState) } },
+        { typeof(MovementAttackState), new Type[] {typeof(IdleState) } },
     };
-
+    
     private List<StateQueueData> _stateQueue = new(StateQueueLimit);
     private OverwritableStack<State> _previousStates = new();
     private State _currentState;
@@ -27,21 +30,27 @@ public class StateController : MonoBehaviour
     private void Start()
     {
         GameObject.Find("InputHandler").GetComponent<PlayerInput>().actions.FindActionMap("Player")["Reset"].performed += _ => SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        _currentState = new IdleState();
-        _currentState.Initialize(gameObject);
-        _currentState.ConnectEvents();
-        _currentState.OnStart();
+        GameObject.Find("InputHandler").GetComponent<PlayerInput>().actions.FindActionMap("Player")["Pause"].performed += _ => Debug.Break();
     }
 
     private void Update()
     {
         _currentState.OnUpdate();
-        ReadStateQueue();
     }
 
     private void FixedUpdate()
     {
         _currentState.OnFixedUpdate();
+        ReadStateQueue();
+        print("in " + _currentState.GetType());
+    }
+
+    private void OnEnable()
+    {
+        _currentState = new IdleState();
+        _currentState.Initialize(gameObject);
+        _currentState.ConnectEvents();
+        _currentState.OnStart();
     }
 
     private void OnDisable()
@@ -80,8 +89,9 @@ public class StateController : MonoBehaviour
             StateQueueData data = _reversedQueue[i];
             if (StateMap[_currentState.GetType()].Contains(data.TransitionState.GetType()))
             {
-                SetState(data.TransitionState);
+                //states added in OnStart immediately if next to lines swapped
                 _stateQueue.RemoveAt(_stateQueue.Count - 1 - i);
+                SetState(data.TransitionState);
                 break;
             }
             else if (data.BufferDuration == 0)

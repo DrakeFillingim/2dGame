@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -31,5 +29,10 @@ public class FallState : State
     protected override void OnJump(InputAction.CallbackContext context)
     {
         _controller.AddStateToQueue(new StateQueueData(new JumpState(), 0));
+    }
+
+    protected override void OnAttack(InputAction.CallbackContext context)
+    {
+        _controller.AddStateToQueue(new StateQueueData(new JumpAttackState(), 0));
     }
 }

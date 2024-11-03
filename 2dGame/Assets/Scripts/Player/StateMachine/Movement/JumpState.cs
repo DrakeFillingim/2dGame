@@ -14,7 +14,7 @@ public class JumpState : State
 
     public override void OnUpdate()
     {
-        Debug.Log("In Jump");
+
     }
 
     public override void OnFixedUpdate()
@@ -33,5 +33,10 @@ public class JumpState : State
     protected override void OnJump(InputAction.CallbackContext context)
     {
         _controller.AddStateToQueue(new StateQueueData(new JumpState(), 0));
+    }
+
+    protected override void OnAttack(InputAction.CallbackContext context)
+    {
+        _controller.AddStateToQueue(new StateQueueData(new JumpAttackState(), 2));
     }
 }

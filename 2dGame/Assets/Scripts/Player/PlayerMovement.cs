@@ -1,6 +1,10 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+/// <summary>
+/// Controls the basic left and right motion of the player,
+/// as well as gravity and friction.
+/// </summary>
 public class PlayerMovement : MonoBehaviour
 {
     private InputActionMap _inputMap;
@@ -57,6 +61,9 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Forces an update of the Input System and resyncs the players direction to it.
+    /// </summary>
     public void CheckMoveInput()
     {
         InputSystem.Update();

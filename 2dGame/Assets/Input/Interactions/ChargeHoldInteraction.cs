@@ -50,7 +50,7 @@ public class ChargeHoldInteraction : IInputInteraction
 
     public void Reset()
     {
-
+        _currentState = States.WaitingForInput;
     }
 
     static ChargeHoldInteraction()

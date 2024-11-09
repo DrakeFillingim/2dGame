@@ -1,5 +1,11 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+
+/// <summary>
+/// Abstract class for all player states to inherit from. Provides
+/// important references, input events, and the <c>Start</c>, 
+/// <c>Update</c>, <c>FixedUpdate</c>, and <c>Exit</c> methods
+/// </summary>
 public abstract class State
 {
     protected static GameObject _player;

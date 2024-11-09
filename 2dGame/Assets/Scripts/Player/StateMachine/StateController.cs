@@ -5,9 +5,16 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// Controls the players state. Externally change the players state via <c>AddStateToQueue</c>
+/// </summary>
 public class StateController : MonoBehaviour
 {
     private const int StateQueueLimit = 8;
+
+    /// <summary>
+    /// Dictionary that controls which states can transition to other states
+    /// </summary>
     private static readonly Dictionary<Type, Type[]> StateMap = new()
     {
         { typeof(FallState), new Type[] { typeof(IdleState), typeof(JumpState), typeof(DashState), typeof(RunState), typeof(JumpAttackState) } },
@@ -75,7 +82,7 @@ public class StateController : MonoBehaviour
 
     /// <summary>
     /// Reads the current state queue. Breaks after a successful state change, 
-    /// removes all non-buffered states that can't transition
+    /// removes all non-buffered states that can't transition.
     /// </summary>
     private void ReadStateQueue()
     {

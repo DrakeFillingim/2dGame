@@ -24,6 +24,19 @@ public class PlayerStats : MonoBehaviour
         }
     }
 
-    public float GravityScale { get; set; } = 30;
+    public const int MaxDashes = 2;
+    public int CurrentDashes { get; set; } = 0;
+
+    public const float DashCooldown = .5f;
+    public bool IsDashing { get; set; } = false;
+    public Timer CanDash { get; private set; }
+
+    public bool ApplyGravity { get; set; } = true;
+    public float GravityScale { get; set; } = 50;
     public Vector2 GravityDirection { get; set; } = Vector2.down;
+
+    public void Start()
+    {
+        CanDash = Timer.CreateTimer(gameObject, "Dash Cooldown", () => { }, DashCooldown);
+    }
 }

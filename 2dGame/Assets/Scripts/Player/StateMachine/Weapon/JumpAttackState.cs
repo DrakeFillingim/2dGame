@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 public class JumpAttackState : State
 {
     private const float _attackLength = .25f;
-    private Timer _attackTimer = Timer.CreateTimer(_player, OnAttackEnd, _attackLength, repeatable: false);
+    private Timer _attackTimer = Timer.CreateTimer(_player, "Jump Attack Timer", OnAttackEnd, _attackLength, repeatable: false);
 
     public override void OnStart()
     {
@@ -33,10 +33,10 @@ public class JumpAttackState : State
     {
         if (MovementHelper.IsGrounded(_player, _stats.GravityDirection))
         {
-            _controller.AddStateToQueue(new StateQueueData(new IdleState(), 0));
+            _controller.AddStateToQueue(new StateQueueData(new IdleState()));
             return;
         }
-        _controller.AddStateToQueue(new StateQueueData(new FallState(), 0));
+        _controller.AddStateToQueue(new StateQueueData(new FallState()));
     }
 
     protected override void OnJump(InputAction.CallbackContext context)

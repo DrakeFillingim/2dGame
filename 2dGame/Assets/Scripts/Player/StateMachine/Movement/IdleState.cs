@@ -16,9 +16,6 @@ public class IdleState : State
                 _controller.AddStateToQueue(new StateQueueData(new WalkState(), 0));
             }
         }
-
-        _inputMap["Dash"].performed += _ => Debug.Log("dash started");
-        _inputMap["Run"].performed += _ => Debug.Log("run performed");
     }
 
     public override void OnUpdate()
@@ -30,7 +27,7 @@ public class IdleState : State
     {
         if (!MovementHelper.IsGrounded(_player, _stats.GravityDirection))
         {
-            _controller.AddStateToQueue(new StateQueueData(new FallState(), 0));
+            _controller.AddStateToQueue(new StateQueueData(new FallState(), destructable: true));
         }
     }
 
@@ -41,7 +38,12 @@ public class IdleState : State
 
     protected override void OnJump(InputAction.CallbackContext context)
     {
-        _controller.AddStateToQueue(new StateQueueData(new JumpState(), 0));
+        _controller.AddStateToQueue(new StateQueueData(new JumpState()));
+    }
+
+    protected override void OnDash(InputAction.CallbackContext context)
+    {
+        _controller.AddStateToQueue(new StateQueueData(new DashState()));
     }
 
     protected override void OnMove(InputAction.CallbackContext context)
@@ -50,17 +52,17 @@ public class IdleState : State
         {
             if (_inputMap["Run"].inProgress)
             {
-                _controller.AddStateToQueue(new StateQueueData(new RunState(), 0));
+                _controller.AddStateToQueue(new StateQueueData(new RunState()));
             }
             else
             {
-                _controller.AddStateToQueue(new StateQueueData(new WalkState(), 0));
+                _controller.AddStateToQueue(new StateQueueData(new WalkState()));
             }
         }
     }
 
     protected override void OnCrouch(InputAction.CallbackContext context)
     {
-        _controller.AddStateToQueue(new StateQueueData(new CrouchState(), 0));
+        _controller.AddStateToQueue(new StateQueueData(new CrouchState()));
     }
 }

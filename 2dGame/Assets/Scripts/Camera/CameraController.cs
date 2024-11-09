@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    private const int MaxFramerate = 144;
+    public int MaxFramerate = 144;
 
     void Start()
     {

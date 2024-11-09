@@ -5,7 +5,7 @@ public class FallState : State
 {
     public override void OnStart()
     {
-        _stats.GravityScale = 45;
+
     }
 
     public override void OnUpdate()
@@ -17,18 +17,23 @@ public class FallState : State
     {
         if (MovementHelper.IsGrounded(_player, _stats.GravityDirection))
         {
-            _controller.AddStateToQueue(new StateQueueData(new IdleState(), 0));
+            _controller.AddStateToQueue(new StateQueueData(new IdleState(), destructable: true));
         }
     }
 
     public override void OnExit()
     {
-        _stats.GravityScale = 30;
+
     }
 
     protected override void OnJump(InputAction.CallbackContext context)
     {
-        _controller.AddStateToQueue(new StateQueueData(new JumpState(), 0));
+        _controller.AddStateToQueue(new StateQueueData(new JumpState()));
+    }
+
+    protected override void OnDash(InputAction.CallbackContext context)
+    {
+        _controller.AddStateToQueue(new StateQueueData(new DashState()));
     }
 
     protected override void OnRunStarted(InputAction.CallbackContext context)
@@ -43,6 +48,6 @@ public class FallState : State
 
     protected override void OnAttack(InputAction.CallbackContext context)
     {
-        _controller.AddStateToQueue(new StateQueueData(new JumpAttackState(), 0));
+        _controller.AddStateToQueue(new StateQueueData(new JumpAttackState()));
     }
 }

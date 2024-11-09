@@ -13,24 +13,28 @@ public class StateController : MonoBehaviour
         { typeof(FallState), new Type[] { typeof(IdleState), typeof(JumpState), typeof(DashState), typeof(RunState), typeof(JumpAttackState) } },
         { typeof(IdleState), new Type[] { typeof(FallState), typeof(JumpState), typeof(DashState), typeof(WalkState), typeof(CrouchState), typeof(RunState), typeof(LightAttackState) } },
         { typeof(JumpState), new Type[] { typeof(FallState), typeof(JumpState), typeof(DashState) } },
-        { typeof(DashState), new Type[] { typeof(FallState), typeof(IdleState), typeof(JumpState), typeof(WalkState), typeof(SlideState), typeof(MovementAttackState) } },
+        { typeof(DashState), new Type[] { typeof(FallState), typeof(IdleState), typeof(WalkState), typeof(SlideState), typeof(MovementAttackState) } },
         { typeof(WalkState), new Type[] { typeof(FallState), typeof(IdleState), typeof(JumpState), typeof(DashState), typeof(CrouchState), typeof(RunState), typeof(LightAttackState) } },
         { typeof(RunState), new Type[] { typeof(FallState), typeof(IdleState), typeof(JumpState), typeof(WalkState), typeof(SlideState) } },
-        { typeof(CrouchState), new Type[] { typeof(FallState), typeof(IdleState), typeof(WalkState), typeof(RunState), typeof(LightAttackState) } },
-        { typeof(SlideState), new Type[] { typeof(JumpState), typeof(CrouchState), typeof(MovementAttackState) } },
+        { typeof(CrouchState), new Type[] { typeof(FallState), typeof(IdleState), typeof(DashState), typeof(WalkState), typeof(RunState), typeof(LightAttackState) } },
+        { typeof(SlideState), new Type[] { typeof(JumpState), typeof(CrouchState), typeof(RunState), typeof(MovementAttackState) } },
         { typeof(JumpAttackState), new Type[] {typeof(FallState), typeof(IdleState) } },
         { typeof(LightAttackState), new Type[] {typeof(IdleState), typeof(LightAttackState) } },
         { typeof(MovementAttackState), new Type[] {typeof(IdleState) } },
     };
-    
+
+    public OverwritableStack<State> previousStates = new();
     private List<StateQueueData> _stateQueue = new(StateQueueLimit);
-    private OverwritableStack<State> _previousStates = new();
     private State _currentState;
 
     private void Start()
     {
         GameObject.Find("InputHandler").GetComponent<PlayerInput>().actions.FindActionMap("Player")["Reset"].performed += _ => SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         GameObject.Find("InputHandler").GetComponent<PlayerInput>().actions.FindActionMap("Player")["Pause"].performed += _ => Debug.Break();
+        _currentState = new IdleState();
+        _currentState.Initialize(gameObject);
+        _currentState.ConnectEvents();
+        _currentState.OnStart();
     }
 
     private void Update()
@@ -42,15 +46,7 @@ public class StateController : MonoBehaviour
     {
         _currentState.OnFixedUpdate();
         ReadStateQueue();
-        print("in " + _currentState.GetType());
-    }
-
-    private void OnEnable()
-    {
-        _currentState = new IdleState();
-        _currentState.Initialize(gameObject);
-        _currentState.ConnectEvents();
-        _currentState.OnStart();
+        //print("in " + _currentState.GetType());
     }
 
     private void OnDisable()
@@ -72,7 +68,7 @@ public class StateController : MonoBehaviour
             _stateQueue.Add(toAdd);
             if (toAdd.BufferDuration > 0)
             {
-                Timer.CreateTimer(gameObject, () => _stateQueue.Remove(toAdd), toAdd.BufferDuration, true, false);
+                Timer.CreateTimer(gameObject, (toAdd.TransitionState.GetType() + " Buffer Timer"),() => _stateQueue.Remove(toAdd), toAdd.BufferDuration, true, false);
             }
         }
     }
@@ -92,6 +88,7 @@ public class StateController : MonoBehaviour
                 //states added in OnStart immediately if next to lines swapped
                 _stateQueue.RemoveAt(_stateQueue.Count - 1 - i);
                 SetState(data.TransitionState);
+                ClearDestructableStates();
                 break;
             }
             else if (data.BufferDuration == 0)
@@ -109,9 +106,20 @@ public class StateController : MonoBehaviour
     {
         _currentState.DisconnectEvents();
         _currentState.OnExit();
-        _previousStates.Push(_currentState);
+        previousStates.Push(_currentState);
         _currentState = toSet;
         _currentState.ConnectEvents();
         _currentState.OnStart();
+    }
+
+    private void ClearDestructableStates()
+    {
+        for (int i = _stateQueue.Count - 1; i >= 0; i--)
+        {
+            if (_stateQueue[i].Destructable)
+            {
+                _stateQueue.RemoveAt(i);
+            }
+        }
     }
 }

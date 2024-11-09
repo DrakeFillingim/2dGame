@@ -20,7 +20,7 @@
                     "id": "22b52b84-9c9d-4c30-ae53-dbd84fbec776",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "CustomTap",
+                    "interactions": "CustomTap(TapTime=0.4)",
                     "initialStateCheck": false
                 },
                 {
@@ -30,7 +30,7 @@
                     "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Crouch",
@@ -47,8 +47,8 @@
                     "id": "c86a6f1f-3da9-44ca-94f7-ce9ef3463ac4",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "ChargeHold(TapTime=0.2)",
-                    "initialStateCheck": false
+                    "interactions": "ChargeHold(TapTime=0.4)",
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Reset",
@@ -83,7 +83,7 @@
                     "id": "08be1b49-6a1a-4305-8aad-342a476d1842",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "ChargeTimedHold(TapTime=0.2,HoldTime=1)",
+                    "interactions": "ChargeTimedHold(TapTime=0.2,HoldTime=2)",
                     "initialStateCheck": false
                 }
             ],

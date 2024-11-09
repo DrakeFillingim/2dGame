@@ -6,6 +6,7 @@ public class PlayerMovement : MonoBehaviour
     private InputActionMap _inputMap;
     private Rigidbody2D _rb;
     private PlayerStats _stats;
+    private SpriteRenderer _renderer;
 
     private float _inputDirection = 0;
 
@@ -16,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
 
         _rb = GetComponent<Rigidbody2D>();
         _stats = GetComponent<PlayerStats>();
+        _renderer = GetComponent<SpriteRenderer>();
 
         _rb.freezeRotation = true;
     }
@@ -37,9 +39,28 @@ public class PlayerMovement : MonoBehaviour
         ApplyGravity();
     }
 
+    private void OnDisable()
+    {
+        _inputMap["Move"].performed -= OnMove;
+    }
+
     private void OnMove(InputAction.CallbackContext context)
     {
         _inputDirection = context.ReadValue<float>();
+        if (_inputDirection == 1)
+        {
+            _renderer.flipX = false; 
+        }
+        else if (_inputDirection == -1)
+        {
+            _renderer.flipX = true;
+        }
+    }
+
+    public void CheckMoveInput()
+    {
+        InputSystem.Update();
+        _inputDirection = _inputMap["Move"].ReadValue<float>();
     }
 
     private void ResetVelocity()
@@ -61,7 +82,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void ApplyGravity()
     {
-        if (!MovementHelper.IsGrounded(gameObject, _stats.GravityDirection))
+        if (_stats.ApplyGravity)
         {
             _rb.AddForce(_stats.GravityDirection * _stats.GravityScale, ForceMode2D.Force);
         }

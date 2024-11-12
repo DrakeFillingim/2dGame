@@ -20,4 +20,9 @@ public static class Easings
     {
         return 1 - Mathf.Pow(1 - (t / m), 5);
     }
+
+    public static float EaseOutExpo(float t, float m)
+    {
+        return (t == m) ? 1 : 1 - Mathf.Pow(2, -10 * t / m);
+    }
 }

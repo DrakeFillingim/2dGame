@@ -6,15 +6,16 @@ using UnityEngine.InputSystem;
 [InitializeOnLoad]
 #endif
 
-public class ChargeHoldInteraction : IInputInteraction
+public class ChargeTimedHoldInteraction : IInputInteraction
 {
     public float TapTime;
+    public float HoldTime;
 
     private enum States
     {
         WaitingForInput,
         WaitingForTapEnd,
-        Activated
+        WaitingForChargeEnd,
     }
     private States _currentState = States.WaitingForInput;
 
@@ -24,27 +25,29 @@ public class ChargeHoldInteraction : IInputInteraction
         {
             if (_currentState == States.WaitingForInput)
             {
-                context.SetTimeout(TapTime);
                 _currentState = States.WaitingForTapEnd;
+                context.SetTimeout(TapTime);
             }
-
             else if (_currentState == States.WaitingForTapEnd && context.timerHasExpired)
             {
+                _currentState = States.WaitingForChargeEnd;
                 context.Started();
-                _currentState = States.Activated;
+                context.SetTimeout(HoldTime);
+            }
+            else if (_currentState == States.WaitingForChargeEnd && context.timerHasExpired)
+            {
+                _currentState = States.WaitingForInput;
+                context.Performed();
             }
         }
         else
         {
-            if (_currentState == States.Activated)
+            if (_currentState == States.WaitingForChargeEnd)
             {
                 context.Canceled();
-                _currentState = States.WaitingForInput;
+
             }
-            else
-            {
-                _currentState = States.WaitingForInput;
-            }
+            _currentState = States.WaitingForInput;
         }
     }
 
@@ -53,9 +56,9 @@ public class ChargeHoldInteraction : IInputInteraction
         _currentState = States.WaitingForInput;
     }
 
-    static ChargeHoldInteraction()
+    static ChargeTimedHoldInteraction()
     {
-        InputSystem.RegisterInteraction<ChargeHoldInteraction>();
+        InputSystem.RegisterInteraction<ChargeTimedHoldInteraction>();
     }
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -63,4 +66,5 @@ public class ChargeHoldInteraction : IInputInteraction
     {
 
     }
+
 }

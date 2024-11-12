@@ -5,6 +5,7 @@ public class IdleState : State
 {
     public override void OnStart()
     {
+        _rb.velocity = Vector2.zero;
         if (_inputMap["Move"].IsPressed())
         {
             if (_inputMap["Run"].inProgress)
@@ -15,6 +16,7 @@ public class IdleState : State
             {
                 _controller.AddStateToQueue(new StateQueueData(new WalkState(), 0));
             }
+            _controller.ForceStateUpdate();
         }
     }
 
@@ -64,5 +66,10 @@ public class IdleState : State
     protected override void OnCrouch(InputAction.CallbackContext context)
     {
         _controller.AddStateToQueue(new StateQueueData(new CrouchState()));
+    }
+
+    protected override void OnChargeAttackStarted(InputAction.CallbackContext context)
+    {
+        _controller.AddStateToQueue(new StateQueueData(new ChargeAttackState()));
     }
 }

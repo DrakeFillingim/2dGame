@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 public class RunState : State
 {
-    public const float RunSpeed = 25;
+    public const float RunSpeed = 12.5f;
     private const float SlideWindow = 0.2f;
 
     private Timer _canSlide = Timer.CreateTimer(_player, "CanSlideTimer", () => _controller.AddStateToQueue(new StateQueueData(new WalkState(), 0)), SlideWindow, repeatable: false);

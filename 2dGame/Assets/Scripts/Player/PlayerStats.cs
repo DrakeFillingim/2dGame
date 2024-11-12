@@ -2,6 +2,10 @@ using UnityEngine;
 
 public class PlayerStats : MonoBehaviour
 {
+    /*public const float WalkSpeed = 5;
+    public const float CrouchSpeed = 3;
+    public const float RunSpeed = 12.5f;*/
+
     public const float GroundAcceleration = 0.2f;
     public const float GroundDeceleration = 0.175f;
     public const float AirAcceleration = 0.075f;
@@ -9,6 +13,7 @@ public class PlayerStats : MonoBehaviour
 
     public float Acceleration { get; set; } = GroundAcceleration;
     public float Deceleration { get; set; } = GroundDeceleration;
+    public bool ApplyFriction { get; set; } = true;
 
     public const float AttackTapTime = 0.2f;
     public const float AttackChargeTime = 1f;
@@ -21,6 +26,7 @@ public class PlayerStats : MonoBehaviour
         set
         {
             _speedModifier = value / _baseSpeed;
+            Debug.Log("speed set to: " + value);
         }
     }
 

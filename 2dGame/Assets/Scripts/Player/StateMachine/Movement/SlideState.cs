@@ -28,7 +28,7 @@ public class SlideState : State
     public override void OnFixedUpdate()
     {
         _currentSlideTime += Time.fixedDeltaTime;
-        _stats.MovementSpeed = Mathf.Lerp(RunState.RunSpeed, CrouchState.CrouchSpeed, Easings.EaseInCubic(_currentSlideTime, MaxSlideTime));
+        _stats.MovementSpeed = Mathf.Lerp(RunState.RunSpeed, CrouchState.CrouchSpeed, Easings.EaseOutQuad(_currentSlideTime, MaxSlideTime));
         if (_currentSlideTime >= MaxSlideTime)
         { 
             _controller.AddStateToQueue(new StateQueueData(new CrouchState()));

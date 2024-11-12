@@ -13,6 +13,7 @@ public class PlayerMovement : MonoBehaviour
     private SpriteRenderer _renderer;
 
     private float _inputDirection = 0;
+    private bool _isGrounded = false;
 
     private void Start()
     {
@@ -28,26 +29,24 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (MovementHelper.IsGrounded(gameObject, _stats.GravityDirection))
-        {
-            _stats.Acceleration = PlayerStats.GroundAcceleration;
-            _stats.Deceleration = PlayerStats.GroundDeceleration;
-        }
-        else
-        {
-            _stats.Acceleration = PlayerStats.AirAcceleration;
-            _stats.Deceleration = PlayerStats.AirDeceleration;
-        }
+        SetPlayerAcceleration();
         ResetVelocity();
         MovePlayer();
         ApplyGravity();
     }
 
+    /// <summary>
+    /// Disconnects input events to prevent duplicate events and events from destroyed input handlers
+    /// </summary>
     private void OnDisable()
     {
         _inputMap["Move"].performed -= OnMove;
     }
 
+    /// <summary>
+    /// Changes the players direction upon recieving an input event
+    /// </summary>
+    /// <param name="context"></param>
     private void OnMove(InputAction.CallbackContext context)
     {
         _inputDirection = context.ReadValue<float>();
@@ -70,6 +69,34 @@ public class PlayerMovement : MonoBehaviour
         _inputDirection = _inputMap["Move"].ReadValue<float>();
     }
 
+    /// <summary>
+    /// Sets the players acceleration to 1 if it hit the ground this frame to prevent reacceleration after speed loss,
+    /// and the appropriate acceleration and deceleration values otherwise.
+    /// </summary>
+    private void SetPlayerAcceleration()
+    {
+        bool groundedThisFrame = MovementHelper.IsGrounded(gameObject, _stats.GravityDirection);
+        if (!_isGrounded && groundedThisFrame)
+        {
+            _stats.Acceleration = 1;
+            Debug.Log("set to 1");
+        }
+        else if (groundedThisFrame)
+        {
+            _stats.Acceleration = PlayerStats.GroundAcceleration;
+            _stats.Deceleration = PlayerStats.GroundDeceleration;
+        }
+        else
+        {
+            _stats.Acceleration = PlayerStats.AirAcceleration;
+            _stats.Deceleration = PlayerStats.AirDeceleration;
+        }
+        _isGrounded = groundedThisFrame;
+    }
+
+    /// <summary>
+    /// Sets the players velocity to 0 if its close enough to zero, used for setting idle state
+    /// </summary>
     private void ResetVelocity()
     {
         if (_rb.velocity.magnitude <= 0.01f)
@@ -78,15 +105,34 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Adds the force that moves the player horizontally.
+    /// </summary>
     private void MovePlayer()
     {
+        //Calculates the players target speed and sets the correct acceleration coefficient.
         float targetSpeed = _inputDirection * _stats.MovementSpeed;
+        float coefficient = 0;
+        if (Mathf.Abs(_rb.velocity.x) <= Mathf.Abs(targetSpeed))
+        {
+            coefficient = _stats.Acceleration;
+        }
+        else if (_stats.ApplyFriction)
+        {
+            coefficient = _stats.Deceleration;
+        }
+        /*
+         * Calculates the difference in speed times the coefficient and adds the force,
+         * causing the player never going above target speed and have responsive turning.
+         */
         float speedDifference = (targetSpeed - _rb.velocity.x) / Time.fixedDeltaTime;
-        float coefficient = (Mathf.Abs(_rb.velocity.x) < Mathf.Abs(targetSpeed)) ? _stats.Acceleration : _stats.Deceleration;
         float movement = coefficient * speedDifference;
         _rb.AddForce(Vector2.right * movement, ForceMode2D.Force);
     }
 
+    /// <summary>
+    ///  Applies force in the direction of <c>_stats.GravityDirection</c>.
+    /// </summary>
     private void ApplyGravity()
     {
         if (_stats.ApplyGravity)

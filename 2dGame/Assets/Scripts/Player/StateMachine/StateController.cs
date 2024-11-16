@@ -20,18 +20,18 @@ public class StateController : MonoBehaviour
         { typeof(FallState), new Type[] { typeof(IdleState), typeof(JumpState), typeof(DashState), typeof(RunState), typeof(JumpAttackState) } },
         { typeof(IdleState), new Type[] { typeof(FallState), typeof(JumpState), typeof(DashState), typeof(WalkState), typeof(CrouchState), typeof(RunState), typeof(LightAttackState), typeof(ChargeAttackState) } },
         { typeof(JumpState), new Type[] { typeof(FallState), typeof(JumpState), typeof(DashState) } },
-        { typeof(DashState), new Type[] { typeof(FallState), typeof(IdleState), typeof(WalkState), typeof(SlideState), typeof(MovementAttackState) } },
+        { typeof(DashState), new Type[] { typeof(FallState), typeof(IdleState), typeof(WalkState), typeof(SlideState) } },
         { typeof(WalkState), new Type[] { typeof(FallState), typeof(IdleState), typeof(JumpState), typeof(DashState), typeof(CrouchState), typeof(RunState), typeof(LightAttackState), typeof(ChargeAttackState) } },
         { typeof(CrouchState), new Type[] { typeof(FallState), typeof(IdleState), typeof(DashState), typeof(WalkState), typeof(RunState), typeof(LightAttackState), typeof(ChargeAttackState) } },
-        { typeof(RunState), new Type[] { typeof(FallState), typeof(IdleState), typeof(JumpState), typeof(WalkState), typeof(SlideState) } },
-        { typeof(SlideState), new Type[] { typeof(JumpState), typeof(CrouchState), typeof(RunState), typeof(MovementAttackState) } },
+        { typeof(RunState), new Type[] { typeof(FallState), typeof(IdleState), typeof(JumpState), typeof(WalkState), typeof(SlideState), typeof(MovementAttackState), typeof(ChargeAttackState) } },
+        { typeof(SlideState), new Type[] { typeof(JumpState), typeof(CrouchState), typeof(RunState) } },
         { typeof(JumpAttackState), new Type[] { typeof(FallState), typeof(IdleState) } },
         { typeof(LightAttackState), new Type[] { typeof(IdleState) } },
         { typeof(ChargeAttackState), new Type[] { typeof(IdleState), typeof(LightAttackState) } },
         { typeof(MovementAttackState), new Type[] { typeof(IdleState) } },
     };
 
-    public OverwritableStack<State> previousStates = new();
+    public OverwritableStack<Type> previousStates = new();
     private List<StateQueueData> _stateQueue = new(StateQueueLimit);
     private State _currentState;
 
@@ -122,7 +122,7 @@ public class StateController : MonoBehaviour
     {
         _currentState.DisconnectEvents();
         _currentState.OnExit();
-        previousStates.Push(_currentState);
+        previousStates.Push(_currentState.GetType());
         _currentState = toSet;
         _currentState.ConnectEvents();
         _currentState.OnStart();

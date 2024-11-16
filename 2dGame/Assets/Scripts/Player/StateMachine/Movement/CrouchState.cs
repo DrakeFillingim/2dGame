@@ -56,4 +56,14 @@ public class CrouchState : State
     {
         _controller.AddStateToQueue(new StateQueueData(new RunState()));
     }
+
+    protected override void OnAttack(InputAction.CallbackContext context)
+    {
+        _controller.AddStateToQueue(new StateQueueData(new LightAttackState()));
+    }
+
+    protected override void OnChargeAttackStarted(InputAction.CallbackContext context)
+    {
+        _controller.AddStateToQueue(new StateQueueData(new ChargeAttackState()));
+    }
 }

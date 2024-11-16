@@ -83,7 +83,7 @@
                     "id": "08be1b49-6a1a-4305-8aad-342a476d1842",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "ChargeTimedHold(TapTime=0.2,HoldTime=0.8)",
+                    "interactions": "ChargeAttack",
                     "initialStateCheck": false
                 }
             ],

@@ -79,7 +79,6 @@ public class PlayerMovement : MonoBehaviour
         if (!_isGrounded && groundedThisFrame)
         {
             _stats.Acceleration = 1;
-            Debug.Log("set to 1");
         }
         else if (groundedThisFrame)
         {

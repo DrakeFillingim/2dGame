@@ -6,16 +6,15 @@ using UnityEngine.InputSystem;
 [InitializeOnLoad]
 #endif
 
-public class ChargeTimedHoldInteraction : IInputInteraction
+public class ChargeAttackInteraction : IInputInteraction
 {
-    public float TapTime;
-    public float HoldTime;
+    public float TapTime = 0.2f;
 
     private enum States
     {
         WaitingForInput,
         WaitingForTapEnd,
-        WaitingForChargeEnd,
+        HeldDown,
     }
     private States _currentState = States.WaitingForInput;
 
@@ -30,23 +29,15 @@ public class ChargeTimedHoldInteraction : IInputInteraction
             }
             else if (_currentState == States.WaitingForTapEnd && context.timerHasExpired)
             {
-                _currentState = States.WaitingForChargeEnd;
+                _currentState = States.HeldDown;
                 context.Started();
-                context.SetTimeout(HoldTime);
-            }
-            else if (_currentState == States.WaitingForChargeEnd && context.timerHasExpired)
-            {
-                Debug.Log("performed");
-                _currentState = States.WaitingForInput;
-                context.Performed();
             }
         }
         else
         {
-            if (_currentState == States.WaitingForChargeEnd)
+            if (_currentState == States.HeldDown)
             {
                 context.Canceled();
-
             }
             _currentState = States.WaitingForInput;
         }
@@ -57,9 +48,9 @@ public class ChargeTimedHoldInteraction : IInputInteraction
         _currentState = States.WaitingForInput;
     }
 
-    static ChargeTimedHoldInteraction()
+    static ChargeAttackInteraction()
     {
-        InputSystem.RegisterInteraction<ChargeTimedHoldInteraction>();
+        InputSystem.RegisterInteraction<ChargeAttackInteraction>();
     }
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]

@@ -26,7 +26,6 @@ public class PlayerStats : MonoBehaviour
         set
         {
             _speedModifier = value / _baseSpeed;
-            Debug.Log("speed set to: " + value);
         }
     }
 

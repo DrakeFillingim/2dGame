@@ -16,7 +16,6 @@ public class IdleState : State
             {
                 _controller.AddStateToQueue(new StateQueueData(new WalkState(), 0));
             }
-            _controller.ForceStateUpdate();
         }
     }
 
@@ -66,6 +65,11 @@ public class IdleState : State
     protected override void OnCrouch(InputAction.CallbackContext context)
     {
         _controller.AddStateToQueue(new StateQueueData(new CrouchState()));
+    }
+
+    protected override void OnAttack(InputAction.CallbackContext context)
+    {
+        _controller.AddStateToQueue(new StateQueueData(new LightAttackState()));
     }
 
     protected override void OnChargeAttackStarted(InputAction.CallbackContext context)

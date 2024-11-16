@@ -54,7 +54,7 @@ public class WalkState : State
 
     protected override void OnAttack(InputAction.CallbackContext context)
     {
-        //Debug.Log("light attack added to q");
+        _controller.AddStateToQueue(new StateQueueData(new LightAttackState()));
     }
 
     protected override void OnChargeAttackStarted(InputAction.CallbackContext context)

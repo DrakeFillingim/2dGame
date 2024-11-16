@@ -17,11 +17,17 @@ public class JumpState : State
         _startingGravity = _stats.GravityScale;
         _stats.GravityScale = JumpGravity;
 
-        if (_controller.previousStates.Pop().GetType() == typeof(SlideState))
+        System.Type previousState = _controller.previousStates.Pop();
+        if (previousState == typeof(SlideState))
         {
-            Debug.Log("slide to jump");
-            CoroutineRunner.CreateCoroutine(_player, LerpAirSlideSpeed());
+            Debug.Log("slide to jump at speed: " + _stats.MovementSpeed);
+            CoroutineRunner.CreateCoroutine(_player, LerpAirSlideSpeed(_stats.MovementSpeed));
         }
+        /*else if (previousState == typeof(RunState))
+        {
+            Debug.Log("run to jump");
+            CoroutineRunner.CreateCoroutine(_player, LerpRunJumpSpeed());
+        }*/
     }
 
     public override void OnUpdate()
@@ -68,7 +74,7 @@ public class JumpState : State
         _controller.AddStateToQueue(new StateQueueData(new JumpAttackState(), .75f));
     }
 
-    private IEnumerator LerpAirSlideSpeed()
+    private IEnumerator LerpAirSlideSpeed(float startSpeed)
     {
         float maxTime = 0.5f;
         float currentTime = 0;
@@ -81,10 +87,25 @@ public class JumpState : State
                 Debug.Log("slide coroutine canceled");
                 yield break;
             }
-            _stats.MovementSpeed = Mathf.Lerp(RunState.RunSpeed, WalkState.WalkSpeed, currentTime / maxTime);
+            _stats.MovementSpeed = Mathf.Lerp(startSpeed, WalkState.WalkSpeed, currentTime / maxTime);
             currentTime += Time.deltaTime;
             yield return null;
         }
         yield break;
     }
+
+    /*private IEnumerator LerpRunJumpSpeed()
+    {
+        float maxTime = 1f;
+        float currentTime = 0;
+
+        while (currentTime <= maxTime)
+        {
+
+            _stats.MovementSpeed = Mathf.Lerp(RunState.RunSpeed, WalkState.WalkSpeed, currentTime / maxTime);
+            currentTime += Time.deltaTime;
+            yield return null;
+        }
+        yield break;
+    }*/
 }

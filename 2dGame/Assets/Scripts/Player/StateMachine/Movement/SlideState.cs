@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 public class SlideState : State
 {
-    private const float MaxSlideTime = .6f;
+    private const float MaxSlideTime = 3;
     private float _currentSlideTime = 0;
 
     private static Sprite _slideSprite = Resources.Load<Sprite>("Sprites/Player/testPlayerCrouch");
@@ -54,5 +54,16 @@ public class SlideState : State
     protected override void OnRunStarted(InputAction.CallbackContext context)
     {
         _controller.AddStateToQueue(new StateQueueData(new RunState()));
+    }
+
+    protected override void OnAttack(InputAction.CallbackContext context)
+    {
+        _controller.AddStateToQueue(new StateQueueData(new MovementAttackState(), .25f));
+    }
+
+    protected override void OnChargeAttackStarted(InputAction.CallbackContext context)
+    {
+        Debug.Log("added");
+        _controller.AddStateToQueue(new StateQueueData(new ChargeAttackState(), 5f));
     }
 }

@@ -9,7 +9,7 @@ public class CoroutineRunner : MonoBehaviour
     private IEnumerator _coroutine;
 
     /// <summary>
-    /// Creates a new runner that "calls" the given function once per update frame.
+    /// Creates a new runner that "calls" the given function once per fixed update frame.
     /// Pass in the <c>IEnumerator</c> returned by calling the coroutine function.
     /// </summary>
     /// <param name="obj"></param>
@@ -22,11 +22,16 @@ public class CoroutineRunner : MonoBehaviour
         return runner;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if(!_coroutine.MoveNext())
         {
             Destroy(this);
         }
+    }
+
+    public void StopCoroutine()
+    {
+        Destroy(this);
     }
 }

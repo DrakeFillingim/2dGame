@@ -112,8 +112,6 @@ public abstract class State
 
     }
 
-    //change on attack to report when mouse clicked or let go, have state store time held,
-    // if greater than tap time, add charge attack to queue
     protected virtual void OnAttack(InputAction.CallbackContext context)
     {
 

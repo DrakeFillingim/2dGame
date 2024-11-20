@@ -1,15 +1,22 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class RunState : State
 {
-    public const float RunSpeed = 12.5f;
+    public const float RunSpeed = 15;
     private const float SlideWindow = 0.2f;
 
-    private Timer _canSlide = Timer.CreateTimer(_player, "CanSlideTimer", () => _controller.AddStateToQueue(new StateQueueData(new WalkState(), 0)), SlideWindow, repeatable: false);
+    private Timer _canSlide;
+
+    private bool _lerpSpeed = false;
 
     public override void OnStart()
     {
+        if (_canSlide == null)
+        {
+            _canSlide = Timer.CreateTimer(_player, "CanSlideTimer", () => OnSlideTimeout(), SlideWindow, repeatable: false);
+        }
         _stats.MovementSpeed = RunSpeed;
         if (!_inputMap["Run"].IsPressed())
         {
@@ -30,7 +37,8 @@ public class RunState : State
         }
         if (!MovementHelper.IsGrounded(_player, _stats.GravityDirection))
         {
-            _controller.AddStateToQueue(new StateQueueData(new FallState()));
+            _controller.AddStateToQueue(new StateQueueData(new FallState(), destructable: true));
+            _lerpSpeed = true;
         }
     }
 
@@ -40,11 +48,30 @@ public class RunState : State
         {
             Object.Destroy(_canSlide);
         }
+        if (_lerpSpeed)
+        {
+            CoroutineRunner.CreateCoroutine(_player, LerpRunAirSpeed(_stats.MovementSpeed, WalkState.WalkSpeed));
+        }
+    }
+
+    private void OnSlideTimeout()
+    {
+        _stats.MovementSpeed = WalkState.WalkSpeed;
+        if (MovementHelper.IsGrounded(_player, _stats.GravityDirection))
+        {
+            _controller.AddStateToQueue(new StateQueueData(new WalkState()));
+        }
+        else
+        {
+            _controller.AddStateToQueue(new StateQueueData(new FallState()));
+            _lerpSpeed = true;
+        }
     }
 
     protected override void OnJump(InputAction.CallbackContext context)
     {
         _controller.AddStateToQueue(new StateQueueData(new JumpState()));
+        _lerpSpeed = true;
     }
 
     protected override void OnDash(InputAction.CallbackContext context)
@@ -60,5 +87,39 @@ public class RunState : State
     protected override void OnRunCanceled(InputAction.CallbackContext context)
     {
         _canSlide.StartTimer();
+    }
+
+    protected override void OnAttack(InputAction.CallbackContext context)
+    {
+        _controller.AddStateToQueue(new StateQueueData(new MovementAttackState()));
+    }
+
+    protected override void OnChargeAttackStarted(InputAction.CallbackContext context)
+    {
+        _controller.AddStateToQueue(new StateQueueData(new ChargeAttackState()));
+    }
+
+    private IEnumerator LerpRunAirSpeed(float startSpeed, float targetSpeed)
+    {
+        float maxTime = 1f;
+        float currentTime = 0;
+        float previousSet = startSpeed;
+
+        while (currentTime <= maxTime)
+        {
+            // Ends the coroutine if speed has been set from somewhere else
+            if (_stats.MovementSpeed != previousSet)
+            {
+                Debug.Log("print");
+                yield break;
+            }
+            _stats.MovementSpeed = Mathf.Lerp(startSpeed, targetSpeed, currentTime / maxTime);
+            previousSet = _stats.MovementSpeed;
+            Debug.Log(_stats.MovementSpeed);
+            currentTime += Time.deltaTime;
+            yield return null;
+        }
+        _stats.MovementSpeed = targetSpeed;
+        yield break;
     }
 }

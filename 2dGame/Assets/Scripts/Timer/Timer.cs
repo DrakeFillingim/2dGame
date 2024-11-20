@@ -52,7 +52,7 @@ public class Timer : MonoBehaviour
 
             if (Repeatable)
             {
-                Reset();
+                ResetTimer();
             }
             else
             {
@@ -64,7 +64,7 @@ public class Timer : MonoBehaviour
     /// <summary>
     /// Sets the current time to 0 and pauses/unpauses based on the value of autostart.
     /// </summary>
-    public void Reset()
+    public void ResetTimer()
     {
         CurrentTime = 0;
         enabled = Autostart;

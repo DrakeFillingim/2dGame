@@ -3,7 +3,6 @@ using UnityEngine.InputSystem;
 
 public class ChargeAttackState : State
 {
-    
     public const float ChargeWalkSpeed = 1.5f;
     private const float ChargeDistance = 6.25f;
     private const float ChargeTime = .4f;
@@ -47,7 +46,14 @@ public class ChargeAttackState : State
             _rb.MovePosition(new Vector2(_startX + (_direction * ChargeDistance * Easings.EaseOutExpo(_currentChargeTime, ChargeTime)), _startY));
             if (_currentChargeTime > ChargeTime)
             {
-                _controller.AddStateToQueue(new StateQueueData(new IdleState()));
+                if (MovementHelper.IsGrounded(_player, _stats.GravityDirection))
+                {
+                    _controller.AddStateToQueue(new StateQueueData(new IdleState()));
+                }
+                else
+                {
+                    _controller.AddStateToQueue(new StateQueueData(new FallState()));
+                }
             }
             _currentChargeTime += Time.deltaTime;
         }
@@ -58,8 +64,9 @@ public class ChargeAttackState : State
         Debug.Log("distance traveled: " + (_startX - _player.transform.position.x));
         _inputMap["Move"].Enable();
         _movement.CheckMoveInput();
-
+        
         _stats.MovementSpeed = WalkState.WalkSpeed;
+        _stats.ApplyGravity = true;
 
         _inputMap["ChargeAttack"].canceled -= OnChargeAttackCanceled;
     }
@@ -71,6 +78,9 @@ public class ChargeAttackState : State
         _inputMap["Move"].Disable();
         _movement.CheckMoveInput();
 
+        _rb.velocity = Vector2.zero;
+        _stats.ApplyGravity = false;
+
         _performed = true;
         if (_renderer.flipX)
         {
@@ -78,10 +88,22 @@ public class ChargeAttackState : State
         }
     }
 
+    protected override void OnJump(InputAction.CallbackContext context)
+    {
+        _controller.AddStateToQueue(new StateQueueData(new JumpState(), .25f));
+    }
+
+    protected override void OnDash(InputAction.CallbackContext context)
+    {
+        Debug.Log("charge dash pressed");
+        _controller.AddStateToQueue(new StateQueueData(new DashState(), 1f));
+    }
+
     private void OnChargeAttackCanceled(InputAction.CallbackContext context)
     {
         if (!_performed)
         {
+            Debug.Log("canceled");
             _controller.AddStateToQueue(new StateQueueData(new LightAttackState()));
         }
     }

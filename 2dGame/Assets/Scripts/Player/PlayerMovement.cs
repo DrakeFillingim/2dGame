@@ -13,12 +13,13 @@ public class PlayerMovement : MonoBehaviour
     private SpriteRenderer _renderer;
 
     private float _inputDirection = 0;
-    private bool _isGrounded = false;
 
     private void Start()
     {
         _inputMap = GameObject.Find("InputHandler").GetComponent<PlayerInput>().actions.FindActionMap("Player");
         _inputMap["Move"].performed += OnMove;
+        _inputMap["Dash"].performed += _ => print("dash pressed, seen in player movement");
+        _inputMap["Run"].canceled += _ => print("run released, seen in player movement");
 
         _rb = GetComponent<Rigidbody2D>();
         _stats = GetComponent<PlayerStats>();
@@ -75,12 +76,7 @@ public class PlayerMovement : MonoBehaviour
     /// </summary>
     private void SetPlayerAcceleration()
     {
-        bool groundedThisFrame = MovementHelper.IsGrounded(gameObject, _stats.GravityDirection);
-        if (!_isGrounded && groundedThisFrame)
-        {
-            _stats.Acceleration = 1;
-        }
-        else if (groundedThisFrame)
+        if (MovementHelper.IsGrounded(gameObject, _stats.GravityDirection))
         {
             _stats.Acceleration = PlayerStats.GroundAcceleration;
             _stats.Deceleration = PlayerStats.GroundDeceleration;
@@ -90,7 +86,6 @@ public class PlayerMovement : MonoBehaviour
             _stats.Acceleration = PlayerStats.AirAcceleration;
             _stats.Deceleration = PlayerStats.AirDeceleration;
         }
-        _isGrounded = groundedThisFrame;
     }
 
     /// <summary>

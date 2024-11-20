@@ -5,16 +5,19 @@ public class IdleState : State
 {
     public override void OnStart()
     {
-        _rb.velocity = Vector2.zero;
+        if (_inputMap["ChargeAttack"].IsInProgress())
+        {
+            _controller.AddStateToQueue(new StateQueueData(new ChargeAttackState()));
+        }
         if (_inputMap["Move"].IsPressed())
         {
             if (_inputMap["Run"].inProgress)
             {
-                _controller.AddStateToQueue(new StateQueueData(new RunState(), 0));
+                _controller.AddStateToQueue(new StateQueueData(new RunState()));
             }
             else
             {
-                _controller.AddStateToQueue(new StateQueueData(new WalkState(), 0));
+                _controller.AddStateToQueue(new StateQueueData(new WalkState()));
             }
         }
     }

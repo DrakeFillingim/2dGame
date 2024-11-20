@@ -43,14 +43,4 @@ public class JumpAttackState : State
     {
         _controller.AddStateToQueue(new StateQueueData(new JumpState(), .3f));
     }
-
-    protected override void OnRunStarted(InputAction.CallbackContext context)
-    {
-        _stats.MovementSpeed = RunState.RunSpeed;
-    }
-
-    protected override void OnRunCanceled(InputAction.CallbackContext context)
-    {
-        _stats.MovementSpeed = WalkState.WalkSpeed;
-    }
 }

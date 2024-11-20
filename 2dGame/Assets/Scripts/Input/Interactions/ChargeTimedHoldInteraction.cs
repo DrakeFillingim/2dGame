@@ -36,7 +36,6 @@ public class ChargeTimedHoldInteraction : IInputInteraction
             }
             else if (_currentState == States.WaitingForChargeEnd && context.timerHasExpired)
             {
-                Debug.Log("performed");
                 _currentState = States.WaitingForInput;
                 context.Performed();
             }

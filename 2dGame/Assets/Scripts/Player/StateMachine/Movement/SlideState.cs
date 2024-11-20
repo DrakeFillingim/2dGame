@@ -1,10 +1,12 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class SlideState : State
 {
-    private const float MaxSlideTime = 3;
+    private const float MaxSlideTime = 1;
     private float _currentSlideTime = 0;
+    private bool _lerpSpeed = false;
 
     private static Sprite _slideSprite = Resources.Load<Sprite>("Sprites/Player/testPlayerCrouch");
     private static Sprite _normalSprite = Resources.Load<Sprite>("Sprites/Player/testPlayer");
@@ -30,8 +32,16 @@ public class SlideState : State
         _currentSlideTime += Time.fixedDeltaTime;
         _stats.MovementSpeed = Mathf.Lerp(RunState.RunSpeed, CrouchState.CrouchSpeed, Easings.EaseOutQuad(_currentSlideTime, MaxSlideTime));
         if (_currentSlideTime >= MaxSlideTime)
-        { 
-            _controller.AddStateToQueue(new StateQueueData(new CrouchState()));
+        {
+            if (MovementHelper.IsGrounded(_player, _stats.GravityDirection))
+            {
+                _controller.AddStateToQueue(new StateQueueData(new CrouchState()));
+            }
+            else
+            {
+                _controller.AddStateToQueue(new StateQueueData(new FallState(), destructable: true));
+                _lerpSpeed = true;
+            }
         }
     }
 
@@ -39,6 +49,10 @@ public class SlideState : State
     {
         _inputMap["Move"].Enable();
         _movement.CheckMoveInput();
+        if (_lerpSpeed)
+        {
+            CoroutineRunner.CreateCoroutine(_player, LerpSlideAirSpeed(_stats.MovementSpeed, WalkState.WalkSpeed));
+        }
 
         _player.transform.position = new Vector2(_player.transform.position.x, _player.transform.position.y + _hitbox.size.y / 2);
         _renderer.sprite = _normalSprite;
@@ -47,8 +61,8 @@ public class SlideState : State
 
     protected override void OnJump(InputAction.CallbackContext context)
     {
-        _stats.MovementSpeed = RunState.RunSpeed;
         _controller.AddStateToQueue(new StateQueueData(new JumpState()));
+        _lerpSpeed = true;
     }
 
     protected override void OnRunStarted(InputAction.CallbackContext context)
@@ -63,7 +77,28 @@ public class SlideState : State
 
     protected override void OnChargeAttackStarted(InputAction.CallbackContext context)
     {
-        Debug.Log("added");
-        _controller.AddStateToQueue(new StateQueueData(new ChargeAttackState(), 5f));
+        _controller.AddStateToQueue(new StateQueueData(new ChargeAttackState(), 1));
+    }
+
+    private IEnumerator LerpSlideAirSpeed(float startSpeed, float targetSpeed)
+    {
+        float maxTime = 0.5f;
+        float currentTime = 0;
+
+        while (currentTime <= maxTime)
+        {
+            if (!_inputMap["Move"].IsPressed())
+            {
+                _stats.MovementSpeed = WalkState.WalkSpeed;
+                Debug.Log("slide coroutine canceled");
+                yield break;
+            }
+            _stats.MovementSpeed = Mathf.Lerp(startSpeed, targetSpeed, currentTime / maxTime);
+            Debug.Log(_stats.MovementSpeed);
+            currentTime += Time.deltaTime;
+            yield return null;
+        }
+        _stats.MovementSpeed = targetSpeed;
+        yield break;
     }
 }

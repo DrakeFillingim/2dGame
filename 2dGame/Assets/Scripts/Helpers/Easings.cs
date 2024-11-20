@@ -1,4 +1,8 @@
 using UnityEngine;
+
+/// <summary>
+/// Class that holds various functions for easing animations or player movement
+/// </summary>
 public static class Easings
 {
     public static float EaseOutSine(float t, float m)
@@ -14,6 +18,11 @@ public static class Easings
     public static float EaseInCubic(float t, float m)
     {
         return Mathf.Pow(t / m, 3);
+    }
+
+    public static float EaseOutCubic(float t, float m)
+    {
+        return 1 - Mathf.Pow(1 - (t / m), 3);
     }
 
     public static float EaseOutQuint(float t, float m)

@@ -1,3 +1,4 @@
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class FallState : State
@@ -14,6 +15,7 @@ public class FallState : State
 
     public override void OnFixedUpdate()
     {
+        
         if (MovementHelper.IsGrounded(_player, _stats.GravityDirection))
         {
             _controller.AddStateToQueue(new StateQueueData(new IdleState(), destructable: true));
@@ -22,7 +24,7 @@ public class FallState : State
 
     public override void OnExit()
     {
-
+        
     }
 
     protected override void OnJump(InputAction.CallbackContext context)
@@ -32,17 +34,8 @@ public class FallState : State
 
     protected override void OnDash(InputAction.CallbackContext context)
     {
+        Debug.Log("fall dash");
         _controller.AddStateToQueue(new StateQueueData(new DashState()));
-    }
-
-    protected override void OnRunStarted(InputAction.CallbackContext context)
-    {
-        _stats.MovementSpeed = RunState.RunSpeed;
-    }
-
-    protected override void OnRunCanceled(InputAction.CallbackContext context)
-    {
-        _stats.MovementSpeed = WalkState.WalkSpeed;
     }
 
     protected override void OnAttack(InputAction.CallbackContext context)

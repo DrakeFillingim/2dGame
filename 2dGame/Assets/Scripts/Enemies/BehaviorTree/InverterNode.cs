@@ -1,26 +1,26 @@
 public class InverterNode : Node
 {
-    private Node childNode;
+    private readonly Node _childNode;
 
-    public InverterNode(Node childNode_)
+    public InverterNode(Node childNode)
     {
-        childNode = childNode_;
+        _childNode = childNode;
     }
 
     public override NodeStates Evaluate()
     {
-        switch (childNode.Evaluate())
+        switch (_childNode.Evaluate())
         {
             case NodeStates.Failure:
-                nodeState = NodeStates.Success;
+                _nodeState = NodeStates.Success;
                 break;
             case NodeStates.Success:
-                nodeState = NodeStates.Failure;
+                _nodeState = NodeStates.Failure;
                 break;
             case NodeStates.Running:
-                nodeState = NodeStates.Running;
+                _nodeState = NodeStates.Running;
                 break;
         }
-        return nodeState;
+        return _nodeState;
     }
 }

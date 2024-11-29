@@ -17,7 +17,7 @@ public class StateController : MonoBehaviour
     /// </summary>
     private static readonly Dictionary<Type, Type[]> StateMap = new()
     {
-        { typeof(FallState), new Type[] { typeof(IdleState), typeof(JumpState), typeof(DashState), typeof(RunState), typeof(JumpAttackState) } },
+        { typeof(FallState), new Type[] { typeof(IdleState), typeof(JumpState), typeof(DashState), typeof(JumpAttackState) } },
         { typeof(IdleState), new Type[] { typeof(FallState), typeof(JumpState), typeof(DashState), typeof(WalkState), typeof(CrouchState), typeof(RunState), typeof(LightAttackState), typeof(ChargeAttackState) } },
         { typeof(JumpState), new Type[] { typeof(FallState), typeof(JumpState), typeof(DashState), typeof(JumpAttackState) } },
         { typeof(DashState), new Type[] { typeof(FallState), typeof(IdleState), typeof(WalkState), typeof(SlideState) } },
@@ -34,6 +34,8 @@ public class StateController : MonoBehaviour
     public OverwritableStack<Type> previousStates = new();
     private List<StateQueueData> _stateQueue = new(StateQueueLimit);
     private State _currentState;
+
+    public event Action<Type> PlayerStateChange;
 
     private void Start()
     {
@@ -121,6 +123,7 @@ public class StateController : MonoBehaviour
     private void SetState(State toSet)
     {
         print("transition from " + _currentState + " to " + toSet);
+        PlayerStateChange?.Invoke(toSet.GetType());
         _currentState.DisconnectEvents();
         _currentState.OnExit();
         previousStates.Push(_currentState.GetType());

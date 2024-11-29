@@ -1,3 +1,6 @@
+/// <summary>
+/// Base class for all nodes to inherit from, must override <c>Evaluate</c>
+/// </summary>
 public abstract class Node
 {
     public enum NodeStates
@@ -6,8 +9,7 @@ public abstract class Node
         Success,
         Running
     }
-
-    public NodeStates nodeState;
+    protected NodeStates _nodeState;
 
     public abstract NodeStates Evaluate();
 }

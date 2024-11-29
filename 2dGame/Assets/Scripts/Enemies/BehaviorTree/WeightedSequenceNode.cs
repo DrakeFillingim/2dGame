@@ -1,19 +1,17 @@
-/// <summary>
-/// Runs each child in order, if any fail then this node fails,
-/// if all succeed then this node succeeds.
-/// </summary>
-public class SequencerNode : Node
+using System.Linq;
+public class WeightedSequenceNode : Node
 {
-    private readonly Node[] _childNodes;
+    private WeightedNode[] _childNodes;
     private int _runningNode = 0;
 
-    public SequencerNode(Node[] childNodes)
+    public WeightedSequenceNode(WeightedNode[] childNodes)
     {
         _childNodes = childNodes;
     }
 
     public override NodeStates Evaluate()
     {
+        CheckIfSort();
         for (int i = _runningNode; i < _childNodes.Length; i++)
         {
             switch (_childNodes[i].Evaluate())
@@ -33,5 +31,25 @@ public class SequencerNode : Node
         }
         _nodeState = NodeStates.Success;
         return _nodeState;
+    }
+
+    private void CheckIfSort()
+    {
+        if (_childNodes.Any(x => x.Dirty == true))
+        {
+            SortChildren();
+            for (int i = 0; i < _childNodes.Length; i++)
+            {
+                _childNodes[i].Clean();
+            }
+        }
+    }
+
+    private void SortChildren()
+    {
+        Node runningNode = _childNodes[_runningNode];
+        _childNodes = _childNodes.OrderBy(x => x.NodeWeight).ToArray();
+        _runningNode = System.Array.IndexOf(_childNodes, runningNode);
+        UnityEngine.Debug.Log("sorted kids");
     }
 }

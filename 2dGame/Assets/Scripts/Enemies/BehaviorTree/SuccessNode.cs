@@ -1,15 +1,15 @@
 public class SuccessNode : Node
 {
-    private Node childNode;
+    private readonly Node _childNode;
 
-    public SuccessNode(Node childNode_)
+    public SuccessNode(Node childNode)
     {
-        childNode = childNode_;
+        _childNode = childNode;
     }
 
     public override NodeStates Evaluate()
     {
-        childNode.Evaluate();
+        _childNode.Evaluate();
         return NodeStates.Success;
     }
 }

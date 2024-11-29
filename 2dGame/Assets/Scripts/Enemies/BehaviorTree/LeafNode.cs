@@ -1,4 +1,4 @@
-public class LeafNode : Node
+/*public class LeafNode : Node
 {
     public System.Func<NodeStates> nodeAction;
 
@@ -12,15 +12,15 @@ public class LeafNode : Node
         switch (nodeAction())
         {
             case NodeStates.Success:
-                nodeState = NodeStates.Success;
+                _nodeState = NodeStates.Success;
                 break;
             case NodeStates.Running:
-                nodeState = NodeStates.Running;
+                _nodeState = NodeStates.Running;
                 break;
             case NodeStates.Failure:
-                nodeState = NodeStates.Failure;
+                _nodeState = NodeStates.Failure;
                 break;
         }
-        return nodeState;
+        return _nodeState;
     }
-}
+}*/

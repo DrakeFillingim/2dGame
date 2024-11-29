@@ -110,12 +110,11 @@ public class RunState : State
             // Ends the coroutine if speed has been set from somewhere else
             if (_stats.MovementSpeed != previousSet)
             {
-                Debug.Log("print");
+                Debug.Log("broken");
                 yield break;
             }
             _stats.MovementSpeed = Mathf.Lerp(startSpeed, targetSpeed, currentTime / maxTime);
             previousSet = _stats.MovementSpeed;
-            Debug.Log(_stats.MovementSpeed);
             currentTime += Time.deltaTime;
             yield return null;
         }

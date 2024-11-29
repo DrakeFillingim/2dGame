@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 
 public class DashState : State
 {
+    private const float MinMovementThreshold = 0.1f;
     private const float DashDistance = 6.25f;
     private const float DashTime = .75f;
     private float _currentDashTime = 0;
@@ -38,9 +39,8 @@ public class DashState : State
         Vector2 deltaPosition = new (_direction * DashDistance * Easings.EaseOutQuint(_currentDashTime, DashTime), 0);
         _rb.MovePosition(_startPosition + deltaPosition);
         _currentDashTime += Time.fixedDeltaTime;
-        if (((deltaPosition - _previousFrameMotion).magnitude < .1 && _currentDashTime > (DashTime / 2)) || _currentDashTime >= DashTime)
+        if (((deltaPosition - _previousFrameMotion).magnitude < MinMovementThreshold && _currentDashTime > (DashTime / 2)) || _currentDashTime >= DashTime)
         {
-            Debug.Log("from inside dash");
             if (MovementHelper.IsGrounded(_player, _stats.GravityDirection))
             {
                 _controller.AddStateToQueue(new StateQueueData(new IdleState()));

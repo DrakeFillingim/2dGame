@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ParryLeaf : WeightedNode
@@ -7,13 +5,13 @@ public class ParryLeaf : WeightedNode
 
     public ParryLeaf()
     {
-        Initialize(0, .4f, 1, true);
+        Initialize(.4f);
     }
 
     public override NodeStates Evaluate()
     {
         Debug.Log("in parry: " + NodeWeight);
-        OnSuccess();
+        //OnSuccess();
         return NodeStates.Success;
     }
 }

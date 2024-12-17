@@ -1,11 +1,11 @@
 using UnityEngine;
 
-public class ProjectileLeaf : WeightedNode
+public class ProjectileLeaf : Node
 {
     private bool run = false;
-    public ProjectileLeaf()
+    public ProjectileLeaf() : base(1, 0.5f)
     {
-        Initialize(1, .5f);
+
     }
 
     public override NodeStates Evaluate()

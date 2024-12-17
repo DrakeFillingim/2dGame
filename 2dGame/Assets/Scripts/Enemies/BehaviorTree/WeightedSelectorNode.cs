@@ -1,11 +1,11 @@
 /// <summary>
-/// Runs each child in order, if any fail then this node fails,
-/// if all succeed then this node succeeds. Will re-sort each child when
-/// any of their weights change.
+/// Runs each child in order, if any succeed then this node succeeds,
+/// if all fail then this node fails. Will re-sort each child when any of
+/// their weights change.
 /// </summary>
-public class WeightedSequenceNode : WeightedCompositeNode
+public class WeightedSelectorNode : WeightedCompositeNode
 {
-    public WeightedSequenceNode(Node[] childNodes, float actionWeight = 0, float baseWeight = 0, float decrementTime = 0, bool lerpWeight = true) :
+    public WeightedSelectorNode(Node[] childNodes, float actionWeight = 0, float baseWeight = 0, float decrementTime = 0, bool lerpWeight = true) :
         base(childNodes, actionWeight, baseWeight, decrementTime, lerpWeight)
     {
 
@@ -20,18 +20,18 @@ public class WeightedSequenceNode : WeightedCompositeNode
             {
                 case NodeStates.Failure:
                     _runningNode = 0;
-                    _nodeState = NodeStates.Failure;
-                    return _nodeState;
+                    continue;
                 case NodeStates.Running:
                     _runningNode = i;
                     _nodeState = NodeStates.Running;
                     return _nodeState;
                 case NodeStates.Success:
                     _runningNode = 0;
-                    continue;
+                    _nodeState = NodeStates.Success;
+                    return _nodeState;
             }
         }
-        _nodeState = NodeStates.Success;
+        _nodeState = NodeStates.Failure;
         return _nodeState;
     }
 }

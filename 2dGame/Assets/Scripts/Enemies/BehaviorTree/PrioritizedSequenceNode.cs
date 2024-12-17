@@ -1,13 +1,14 @@
 /// <summary>
-/// Runs each child in order, if any succeed then this node succeeds,
-/// if all fail then this node fails.
+/// Runs each child in order, if any fail then this node fails,
+/// if all succeed then this node succeeds.
 /// </summary>
-public class SelectorNode : Node
+public class PrioritizedSequenceNode : Node
 {
     private readonly Node[] _childNodes;
     private int _runningNode = 0;
 
-    public SelectorNode(Node[] childNodes)
+    public PrioritizedSequenceNode(Node[] childNodes, float actionWeight = 0, float baseWeight = 0, float decrementTime = 0, bool lerpWeight = true) : 
+        base(actionWeight, baseWeight, decrementTime, lerpWeight)
     {
         _childNodes = childNodes;
     }
@@ -20,18 +21,18 @@ public class SelectorNode : Node
             {
                 case NodeStates.Failure:
                     _runningNode = 0;
-                    continue;
+                    _nodeState = NodeStates.Failure;
+                    return _nodeState;
                 case NodeStates.Running:
                     _runningNode = i;
                     _nodeState = NodeStates.Running;
                     return _nodeState;
                 case NodeStates.Success:
                     _runningNode = 0;
-                    _nodeState = NodeStates.Success;
-                    return _nodeState;
+                    continue;
             }
         }
-        _nodeState = NodeStates.Failure;
+        _nodeState = NodeStates.Success;
         return _nodeState;
     }
 }

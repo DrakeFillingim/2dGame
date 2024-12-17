@@ -1,11 +1,11 @@
 using UnityEngine;
 
-public class ParryLeaf : WeightedNode
+public class ParryLeaf : Node
 {
 
-    public ParryLeaf()
+    public ParryLeaf() : base(0.4f)
     {
-        Initialize(.4f);
+
     }
 
     public override NodeStates Evaluate()

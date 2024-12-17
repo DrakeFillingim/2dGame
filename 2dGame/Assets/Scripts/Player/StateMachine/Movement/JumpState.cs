@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 public class JumpState : State
 {
     private const float JumpHeight = 6;
-    private const float JumpGravity = 30;
+    private const float JumpGravity = 40;
     private static float JumpForce = Mathf.Sqrt(2 * JumpGravity * JumpHeight);
 
     private float _startingGravity;

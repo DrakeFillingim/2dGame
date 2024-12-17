@@ -22,12 +22,12 @@ public class TestAI : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
         _renderer = GetComponent<SpriteRenderer>();
         _player = GameObject.Find("Player").transform;
-        _root = new SelectorNode(new Node[] {
+        _root = new PrioritizedSelectorNode(new Node[] {
             new InverterNode(new CheckFloatLeaf(() => (_player.position - transform.position).sqrMagnitude, 9)),
             new DashLeaf(DashDistance, DashTime, _dashCurve, _getDirection, _rb),
         });
 
-        _testWeight = new WeightedSequenceNode(new WeightedNode[] {
+        _testWeight = new WeightedSequenceNode(new Node[] {
             //new AttackLeaf(), 
             new ParryLeaf(), new ProjectileLeaf()
         });

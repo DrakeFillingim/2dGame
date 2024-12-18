@@ -8,20 +8,19 @@ public abstract class WeightedCompositeNode : Node
     protected Node[] _childNodes;
     protected int _runningNode;
 
-    public WeightedCompositeNode(Node[] childNodes, float actionWeight = 0, float baseWeight = 0, float decrementTime = 0, bool lerpWeight = true) :
-        base(actionWeight, baseWeight, decrementTime, lerpWeight)
+    public WeightedCompositeNode(Node[] childNodes)
     {
         _childNodes = childNodes;
     }
 
     protected void CheckIfSort()
     {
-        if (_childNodes.Any(x => x.Dirty == true))
+        if (_childNodes.Any(x => x.WeightComponent.Dirty == true))
         {
             SortChildren();
             for (int i = 0; i < _childNodes.Length; i++)
             {
-                _childNodes[i].Dirty = false;
+                _childNodes[i].WeightComponent.Dirty = false;
             }
         }
     }
@@ -29,7 +28,7 @@ public abstract class WeightedCompositeNode : Node
     private void SortChildren()
     {
         Node runningNode = _childNodes[_runningNode];
-        _childNodes = _childNodes.OrderBy(x => x.NodeWeight).ToArray();
+        _childNodes = _childNodes.OrderBy(x => x.WeightComponent.Value).ToArray();
         _runningNode = System.Array.IndexOf(_childNodes, runningNode);
         UnityEngine.Debug.Log("sorted kids");
     }

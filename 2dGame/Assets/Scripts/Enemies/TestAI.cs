@@ -14,7 +14,6 @@ public class TestAI : MonoBehaviour
     private Transform _player;
         
     private Node _root;
-    private WeightedSequenceNode _testWeight;
     
     private void Start()
     {
@@ -22,14 +21,11 @@ public class TestAI : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
         _renderer = GetComponent<SpriteRenderer>();
         _player = GameObject.Find("Player").transform;
-        _root = new PrioritizedSelectorNode(new Node[] {
-            new InverterNode(new CheckFloatLeaf(() => (_player.position - transform.position).sqrMagnitude, 9)),
-            new DashLeaf(DashDistance, DashTime, _dashCurve, _getDirection, _rb),
-        });
 
-        _testWeight = new WeightedSequenceNode(new Node[] {
-            //new AttackLeaf(), 
-            new ParryLeaf(), new ProjectileLeaf()
+        _root = NodeFactory.CreateCompositeNode<PrioritizedSelectorNode>(new Node[] {
+            NodeFactory.CreateDecoratorNode<InverterNode>(
+                NodeFactory.CreateNode<CheckFloatLeaf>(new object[] {new System.Func<float> (()=>(_player.position - transform.position).sqrMagnitude), 9 })),
+            NodeFactory.CreateNode<DashLeaf>(new object[] {DashDistance, DashTime, _dashCurve, _getDirection, _rb})
         });
     }
 
@@ -46,6 +42,5 @@ public class TestAI : MonoBehaviour
             _direction = -1;
         }
         _root.Evaluate();
-        _testWeight.Evaluate();
     }
 }

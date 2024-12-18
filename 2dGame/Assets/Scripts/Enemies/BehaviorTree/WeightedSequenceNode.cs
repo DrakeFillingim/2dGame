@@ -5,8 +5,7 @@
 /// </summary>
 public class WeightedSequenceNode : WeightedCompositeNode
 {
-    public WeightedSequenceNode(Node[] childNodes, float actionWeight = 0, float baseWeight = 0, float decrementTime = 0, bool lerpWeight = true) :
-        base(childNodes, actionWeight, baseWeight, decrementTime, lerpWeight)
+    public WeightedSequenceNode(Node[] childNodes) : base(childNodes)
     {
 
     }

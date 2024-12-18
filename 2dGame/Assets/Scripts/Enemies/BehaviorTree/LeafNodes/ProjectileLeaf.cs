@@ -3,17 +3,17 @@ using UnityEngine;
 public class ProjectileLeaf : Node
 {
     private bool run = false;
-    public ProjectileLeaf() : base(1, 0.5f)
+    public ProjectileLeaf()
     {
 
     }
 
     public override NodeStates Evaluate()
     {
-        Debug.Log("in projectile: " + NodeWeight);
+        Debug.Log("in projectile: " + WeightComponent.Value);
         if (!run)
         {
-            OnSuccess();
+            WeightComponent.OnSuccess();
             run = true;
         }
         return NodeStates.Success;

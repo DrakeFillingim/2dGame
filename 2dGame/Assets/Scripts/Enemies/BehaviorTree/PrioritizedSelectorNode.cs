@@ -7,8 +7,7 @@ public class PrioritizedSelectorNode : Node
     private readonly Node[] _childNodes;
     private int _runningNode = 0;
 
-    public PrioritizedSelectorNode(Node[] childNodes, float actionWeight = 0, float baseWeight = 0, float decrementTime = 0, bool lerpWeight = true) : 
-        base(actionWeight, baseWeight, decrementTime, lerpWeight)
+    public PrioritizedSelectorNode(Node[] childNodes)
     {
         _childNodes = childNodes;
     }

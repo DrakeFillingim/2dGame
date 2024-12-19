@@ -16,6 +16,11 @@ public abstract class Node
 
     public Weight WeightComponent { get; set; }
 
+    public Node(Weight weightComponent)
+    {
+        WeightComponent = weightComponent;
+    }
+
     public abstract NodeStates Evaluate();
 
     public class Weight

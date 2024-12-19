@@ -7,7 +7,7 @@ public class PrioritizedSequenceNode : Node
     private readonly Node[] _childNodes;
     private int _runningNode = 0;
 
-    public PrioritizedSequenceNode(Node[] childNodes)
+    public PrioritizedSequenceNode(Node[] childNodes, Weight weightComponent = null) : base(weightComponent)
     {
         _childNodes = childNodes;
     }

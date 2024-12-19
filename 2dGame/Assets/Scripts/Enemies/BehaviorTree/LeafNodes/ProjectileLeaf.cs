@@ -3,7 +3,7 @@ using UnityEngine;
 public class ProjectileLeaf : Node
 {
     private bool run = false;
-    public ProjectileLeaf()
+    public ProjectileLeaf(Weight weightComponent) : base(weightComponent)
     {
 
     }

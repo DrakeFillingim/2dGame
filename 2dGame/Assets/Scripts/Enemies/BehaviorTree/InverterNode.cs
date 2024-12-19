@@ -6,7 +6,7 @@ public class InverterNode : Node
 {
     private readonly Node _childNode;
 
-    public InverterNode(Node childNode)
+    public InverterNode(Node childNode, Weight weightComponent = null) : base(weightComponent)
     {
         _childNode = childNode;
     }

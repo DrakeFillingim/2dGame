@@ -3,7 +3,7 @@ using UnityEngine;
 public class ParryLeaf : Node
 {
 
-    public ParryLeaf()
+    public ParryLeaf(Weight weightComponent = null) : base(weightComponent)
     {
 
     }

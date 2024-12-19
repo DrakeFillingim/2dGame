@@ -9,11 +9,13 @@ public class TestAI : MonoBehaviour
     private int _direction = 1;
     private System.Func<float, float, float> _dashCurve = Easings.EaseOutCubic;
     private System.Func<int> _getDirection;
+
     private Rigidbody2D _rb;
     private SpriteRenderer _renderer;
     private Transform _player;
         
     private Node _root;
+    private Node _testWeight;
     
     private void Start()
     {
@@ -22,11 +24,18 @@ public class TestAI : MonoBehaviour
         _renderer = GetComponent<SpriteRenderer>();
         _player = GameObject.Find("Player").transform;
 
-        _root = NodeFactory.CreateCompositeNode<PrioritizedSelectorNode>(new Node[] {
-            NodeFactory.CreateDecoratorNode<InverterNode>(
-                NodeFactory.CreateNode<CheckFloatLeaf>(new object[] {new System.Func<float> (()=>(_player.position - transform.position).sqrMagnitude), 9 })),
-            NodeFactory.CreateNode<DashLeaf>(new object[] {DashDistance, DashTime, _dashCurve, _getDirection, _rb})
+        _root = new PrioritizedSelectorNode(new Node[] {
+            new InverterNode(
+                new CheckFloatLeaf(() => (_player.position - transform.position).sqrMagnitude, 9)
+            ),
+            new DashLeaf(DashDistance, DashTime, _dashCurve, _getDirection, _rb)
         });
+
+        /*_testWeight = new WeightedSequenceNode(new Node[] {
+            new ParryLeaf(new Node.Weight(0.4f)),
+            new ProjectileLeaf(new Node.Weight(1, 0.5f, 1, false))
+        });*/
+        GameObject.Find("Player").GetComponent<StateController>().PlayerStateChange += OnPlayerStateChange;
     }
 
     private void FixedUpdate()
@@ -42,5 +51,13 @@ public class TestAI : MonoBehaviour
             _direction = -1;
         }
         _root.Evaluate();
+    }
+
+    private void OnPlayerStateChange(System.Type newState)
+    {
+        if (newState == typeof(LightAttackState))
+        {
+            Debug.Log("player attacked");
+        }
     }
 }

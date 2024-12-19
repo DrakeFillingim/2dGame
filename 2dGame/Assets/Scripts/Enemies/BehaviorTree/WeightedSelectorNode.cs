@@ -5,7 +5,7 @@
 /// </summary>
 public class WeightedSelectorNode : WeightedCompositeNode
 {
-    public WeightedSelectorNode(Node[] childNodes) : base(childNodes)
+    public WeightedSelectorNode(Node[] childNodes, Weight weightComponent = null) : base(childNodes, weightComponent)
     {
 
     }

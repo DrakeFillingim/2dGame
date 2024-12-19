@@ -6,7 +6,7 @@ public class CheckBoolLeaf : Node
     private readonly System.Func<bool> GetValue;
     private readonly bool _targetValue;
 
-    public CheckBoolLeaf(System.Func<bool> getValue, bool targetValue)
+    public CheckBoolLeaf(System.Func<bool> getValue, bool targetValue, Weight weightComponent = null) : base(weightComponent)
     {
         GetValue = getValue;
         _targetValue = targetValue;

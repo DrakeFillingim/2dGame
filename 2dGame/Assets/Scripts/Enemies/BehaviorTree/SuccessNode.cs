@@ -2,7 +2,7 @@ public class SuccessNode : Node
 {
     private readonly Node _childNode;
 
-    public SuccessNode(Node childNode)
+    public SuccessNode(Node childNode, Weight weightComponent = null) : base(weightComponent)
     {
         _childNode = childNode;
     }

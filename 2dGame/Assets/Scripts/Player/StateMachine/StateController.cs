@@ -123,13 +123,13 @@ public class StateController : MonoBehaviour
     private void SetState(State toSet)
     {
         print("transition from " + _currentState + " to " + toSet);
-        PlayerStateChange?.Invoke(toSet.GetType());
         _currentState.DisconnectEvents();
         _currentState.OnExit();
         previousStates.Push(_currentState.GetType());
         _currentState = toSet;
         _currentState.ConnectEvents();
         _currentState.OnStart();
+        PlayerStateChange?.Invoke(_currentState.GetType());
     }
 
     private void ClearDestructableStates()

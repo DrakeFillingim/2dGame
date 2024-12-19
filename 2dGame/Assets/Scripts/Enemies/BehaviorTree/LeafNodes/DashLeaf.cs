@@ -13,7 +13,7 @@ public class DashLeaf : Node
     private Vector2 _startPosition;
     private bool _firstFrame = true;
 
-    public DashLeaf(float dashDistance, float dashTime, System.Func<float, float, float> dashCurve, System.Func<int> direction, Rigidbody2D rb)
+    public DashLeaf(float dashDistance, float dashTime, System.Func<float, float, float> dashCurve, System.Func<int> direction, Rigidbody2D rb, Weight weightComponent = null) : base(weightComponent)
     {
         _dashDistance = dashDistance;
         _dashTime = dashTime;

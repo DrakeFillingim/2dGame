@@ -5,7 +5,7 @@
 /// </summary>
 public class WeightedSequenceNode : WeightedCompositeNode
 {
-    public WeightedSequenceNode(Node[] childNodes) : base(childNodes)
+    public WeightedSequenceNode(Node[] childNodes, Weight weightComponent = null) : base(childNodes, weightComponent)
     {
 
     }
@@ -13,6 +13,7 @@ public class WeightedSequenceNode : WeightedCompositeNode
     public override NodeStates Evaluate()
     {
         CheckIfSort();
+        UnityEngine.Debug.Log(_runningNode);
         for (int i = _runningNode; i < _childNodes.Length; i++)
         {
             switch (_childNodes[i].Evaluate())

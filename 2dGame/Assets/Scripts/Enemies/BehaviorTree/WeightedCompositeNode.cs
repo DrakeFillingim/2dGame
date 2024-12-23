@@ -29,5 +29,9 @@ public abstract class WeightedCompositeNode : Node
     {
         _childNodes = _childNodes.OrderBy(x => x.WeightComponent.Value).ToArray();
         UnityEngine.Debug.Log("sorted kids");
+        foreach (Node n in _childNodes)
+        {
+            UnityEngine.Debug.Log(n.GetType() + " " + n.WeightComponent.Value);
+        }
     }
 }

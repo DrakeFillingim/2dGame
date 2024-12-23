@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+//Get full slide if falling off edge, intended?
 public class SlideState : State
 {
     private const float MaxSlideTime = 1;

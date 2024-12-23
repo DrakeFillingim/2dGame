@@ -7,7 +7,7 @@ public class RunState : State
     public const float RunSpeed = 15;
     private const float SlideWindow = 0.2f;
 
-    private Timer _canSlide;
+    private static Timer _canSlide;
 
     private bool _lerpSpeed = false;
 
@@ -15,7 +15,7 @@ public class RunState : State
     {
         if (_canSlide == null)
         {
-            _canSlide = Timer.CreateTimer(_player, "CanSlideTimer", () => OnSlideTimeout(), SlideWindow, repeatable: false);
+            _canSlide = Timer.CreateTimer(_player, "CanSlideTimer", () => OnSlideTimeout(), SlideWindow);
         }
         _stats.MovementSpeed = RunSpeed;
         if (!_inputMap["Run"].IsPressed())
@@ -44,10 +44,7 @@ public class RunState : State
 
     public override void OnExit()
     {
-        if (_canSlide != null)
-        {
-            Object.Destroy(_canSlide);
-        }
+        _canSlide.ResetTimer();
         if (_lerpSpeed)
         {
             CoroutineRunner.CreateCoroutine(_player, LerpRunAirSpeed(_stats.MovementSpeed, WalkState.WalkSpeed));

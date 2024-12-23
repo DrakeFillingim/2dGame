@@ -12,13 +12,30 @@ public abstract class Node
         Running
     }
 
-    protected NodeStates _nodeState;
+    public event System.Action NodeSuccess;
+    public event System.Action NodeFailure;
 
     public Weight WeightComponent { get; set; }
+
+    protected NodeStates _nodeState;
 
     public Node(Weight weightComponent)
     {
         WeightComponent = weightComponent;
+        if (WeightComponent != null)
+        {
+            NodeSuccess += WeightComponent.OnSuccess;
+        }
+    }
+
+    protected void RaiseNodeSuccess()
+    {
+        NodeSuccess?.Invoke();
+    }
+
+    protected void RaiseNodeFailure()
+    {
+        NodeFailure?.Invoke();
     }
 
     public abstract NodeStates Evaluate();
@@ -65,7 +82,7 @@ public abstract class Node
                 }
                 else
                 {
-                    Value = Mathf.Ceil(1 - ((Time.time - _updateTime) / _decrementTime));
+                    Value = Mathf.Ceil(_value - ((Time.time - _updateTime) / _decrementTime)) * _value;
                 }
                 return _value;
             }

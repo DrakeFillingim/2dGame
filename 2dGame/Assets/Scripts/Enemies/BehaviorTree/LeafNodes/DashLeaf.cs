@@ -34,6 +34,7 @@ public class DashLeaf : Node
         _currentDashTime += Time.deltaTime;
         if (_currentDashTime >= _dashTime)
         {
+            RaiseNodeSuccess();
             _currentDashTime = 0;
             _firstFrame = true;
             return NodeStates.Success;

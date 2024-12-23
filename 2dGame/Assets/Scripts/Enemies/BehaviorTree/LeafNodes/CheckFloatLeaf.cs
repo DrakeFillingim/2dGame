@@ -14,7 +14,7 @@ public class CheckFloatLeaf : Node
 
     public override NodeStates Evaluate()
     {
-        if (_targetValue >= GetValue())
+        if (GetValue() >= _targetValue)
         {
             return NodeStates.Success;
         }

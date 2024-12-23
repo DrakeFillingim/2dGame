@@ -15,7 +15,12 @@ public class TestAI : MonoBehaviour
     private Transform _player;
         
     private Node _root;
-    private Node _testWeight;
+    private Node parryLeaf;
+    private Node dashLeaf;
+
+    private bool _playerAttacking = false;
+    private Timer _playerAttackTimer;
+
     
     private void Start()
     {
@@ -24,17 +29,23 @@ public class TestAI : MonoBehaviour
         _renderer = GetComponent<SpriteRenderer>();
         _player = GameObject.Find("Player").transform;
 
-        _root = new PrioritizedSelectorNode(new Node[] {
+        parryLeaf = new ParryLeaf(new Node.Weight(.3f, decrementTime: 3, lerpWeight: false));
+        parryLeaf.NodeSuccess += () => _playerAttacking = false;
+
+        dashLeaf = new DashLeaf(DashDistance, DashTime, _dashCurve, _getDirection, _rb, new Node.Weight(1, 0.5f, lerpWeight: false));
+         
+        _root = new PrioritizedSequenceNode(new Node[] {
+            new CheckBoolLeaf(() => _playerAttacking),
             new InverterNode(
                 new CheckFloatLeaf(() => (_player.position - transform.position).sqrMagnitude, 9)
             ),
-            new DashLeaf(DashDistance, DashTime, _dashCurve, _getDirection, _rb)
+            new WeightedSelectorNode(new Node[] {
+                parryLeaf,
+                dashLeaf
+            })
         });
 
-        /*_testWeight = new WeightedSequenceNode(new Node[] {
-            new ParryLeaf(new Node.Weight(0.4f)),
-            new ProjectileLeaf(new Node.Weight(1, 0.5f, 1, false))
-        });*/
+        _playerAttackTimer = Timer.CreateTimer(gameObject, "Player Attack Timer", () => _playerAttacking = false, .3f);
         GameObject.Find("Player").GetComponent<StateController>().PlayerStateChange += OnPlayerStateChange;
     }
 
@@ -57,7 +68,9 @@ public class TestAI : MonoBehaviour
     {
         if (newState == typeof(LightAttackState))
         {
-            Debug.Log("player attacked");
+            _playerAttacking = true;
+            _playerAttackTimer.ResetTimer();
+            _playerAttackTimer.StartTimer();
         }
     }
 }

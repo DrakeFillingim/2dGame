@@ -5,6 +5,7 @@ public class IdleState : State
 {
     public override void OnStart()
     {
+        _playerAnimator.Play("Idle");
         if (_inputMap["ChargeAttack"].IsInProgress())
         {
             _controller.AddStateToQueue(new StateQueueData(new ChargeAttackState()));

@@ -13,7 +13,6 @@ public class WeightedSequenceNode : WeightedCompositeNode
     public override NodeStates Evaluate()
     {
         CheckIfSort();
-        UnityEngine.Debug.Log(_runningNode);
         for (int i = _runningNode; i < _childNodes.Length; i++)
         {
             switch (_childNodes[i].Evaluate())

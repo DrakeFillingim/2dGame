@@ -53,11 +53,13 @@ public class PlayerMovement : MonoBehaviour
         _inputDirection = context.ReadValue<float>();
         if (_inputDirection == 1)
         {
-            _renderer.flipX = false; 
+            //_renderer.flipX = false;
+            transform.localScale = new Vector3(1, transform.localScale.y, transform.localScale.z);
         }
         else if (_inputDirection == -1)
         {
-            _renderer.flipX = true;
+            //_renderer.flipX = true;
+            transform.localScale = new Vector3(-1, transform.localScale.y, transform.localScale.z);
         }
     }
 

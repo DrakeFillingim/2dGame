@@ -5,7 +5,18 @@ public class IdleState : State
 {
     public override void OnStart()
     {
-        _playerAnimator.Play("Idle");
+        //_animator.SetInteger("State", (int)StateTypes.Idle);
+        //_animator.Update(0);
+        /*if (!_animator.IsInTransition(0))
+        {
+            _animator.Play("Idle");
+        }*/
+        _animator.Update(0);
+        if (_animator.IsInTransition(0))
+        {
+            Debug.Log("starting animation during transition");
+        }
+        _animator.CrossFade("Idle", 1f);
         if (_inputMap["ChargeAttack"].IsInProgress())
         {
             _controller.AddStateToQueue(new StateQueueData(new ChargeAttackState()));
@@ -25,7 +36,7 @@ public class IdleState : State
 
     public override void OnUpdate()
     {
-
+        
     }
 
     public override void OnFixedUpdate()
@@ -79,5 +90,10 @@ public class IdleState : State
     protected override void OnChargeAttackStarted(InputAction.CallbackContext context)
     {
         _controller.AddStateToQueue(new StateQueueData(new ChargeAttackState()));
+    }
+
+    protected override void OnParry(InputAction.CallbackContext context)
+    {
+        _controller.AddStateToQueue(new StateQueueData(new ParryState()));
     }
 }

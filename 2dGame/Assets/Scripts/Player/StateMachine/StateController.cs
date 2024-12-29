@@ -18,7 +18,8 @@ public class StateController : MonoBehaviour
     private static readonly Dictionary<Type, Type[]> StateMap = new()
     {
         { typeof(FallState), new Type[] { typeof(IdleState), typeof(JumpState), typeof(DashState), typeof(JumpAttackState) } },
-        { typeof(IdleState), new Type[] { typeof(FallState), typeof(JumpState), typeof(DashState), typeof(WalkState), typeof(CrouchState), typeof(RunState), typeof(LightAttackState), typeof(ChargeAttackState) } },
+        { typeof(IdleState), new Type[] { typeof(FallState), typeof(JumpState), typeof(DashState), typeof(WalkState), typeof(CrouchState), 
+                                          typeof(RunState), typeof(LightAttackState), typeof(ChargeAttackState), typeof(ParryState) } },
         { typeof(JumpState), new Type[] { typeof(FallState), typeof(JumpState), typeof(DashState), typeof(JumpAttackState) } },
         { typeof(DashState), new Type[] { typeof(FallState), typeof(IdleState), typeof(WalkState), typeof(SlideState) } },
         { typeof(WalkState), new Type[] { typeof(FallState), typeof(IdleState), typeof(JumpState), typeof(DashState), typeof(CrouchState), typeof(RunState), typeof(LightAttackState), typeof(ChargeAttackState) } },
@@ -29,6 +30,8 @@ public class StateController : MonoBehaviour
         { typeof(LightAttackState), new Type[] { typeof(IdleState) } },
         { typeof(ChargeAttackState), new Type[] { typeof(FallState), typeof(IdleState), typeof(LightAttackState) } },
         { typeof(MovementAttackState), new Type[] { typeof(IdleState) } },
+        { typeof(ParryState), new Type[] {typeof(IdleState), typeof(BlockState) } },
+        { typeof(BlockState), new Type[] {typeof(IdleState) } },
     };
 
     public OverwritableStack<Type> previousStates = new();

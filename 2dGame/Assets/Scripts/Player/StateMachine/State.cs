@@ -8,11 +8,29 @@ using UnityEngine.InputSystem;
 /// </summary>
 public abstract class State
 {
+    protected enum StateTypes
+    {
+        Idle,
+        Walk,
+        Run,
+        Crouch,
+        Slide,
+        Jump,
+        Fall,
+        Dash,
+        LightAttack,
+        MovementAttack,
+        JumpAttack,
+        ChargeAttack,
+        Parry,
+        Block,
+    }
+
     protected static GameObject _player;
     protected static StateController _controller;
     protected static Rigidbody2D _rb;
     protected static PlayerStats _stats;
-    protected static Animator _playerAnimator;
+    protected static Animator _animator;
     protected static SpriteRenderer _renderer;
     protected static InputActionMap _inputMap;
 
@@ -26,7 +44,7 @@ public abstract class State
         _controller = player.GetComponent<StateController>();
         _rb = player.GetComponent<Rigidbody2D>();
         _stats = player.GetComponent<PlayerStats>();
-        _playerAnimator = player.GetComponent<Animator>();
+        _animator = player.GetComponent<Animator>();
         _renderer = player.GetComponent<SpriteRenderer>();
         _inputMap = GameObject.Find("InputHandler").GetComponent<PlayerInput>().actions.FindActionMap("Player");
     }
@@ -61,6 +79,7 @@ public abstract class State
         _inputMap["Run"].canceled += OnRunCanceled;
         _inputMap["Attack"].performed += OnAttack;
         _inputMap["ChargeAttack"].started += OnChargeAttackStarted;
+        _inputMap["Parry"].performed += OnParry;
     }
     /// <summary>
     /// Disconnects the state from all input events to prevent duplicate events
@@ -75,6 +94,7 @@ public abstract class State
         _inputMap["Run"].canceled -= OnRunCanceled;
         _inputMap["Attack"].performed -= OnAttack;
         _inputMap["ChargeAttack"].started -= OnChargeAttackStarted;
+        _inputMap["Parry"].performed -= OnParry;
     }
 
     /*
@@ -120,5 +140,10 @@ public abstract class State
     protected virtual void OnChargeAttackStarted(InputAction.CallbackContext context)
     {
 
+    }
+
+    protected virtual void OnParry(InputAction.CallbackContext context)
+    {
+        
     }
 }

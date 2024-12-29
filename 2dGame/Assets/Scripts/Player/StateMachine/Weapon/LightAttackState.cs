@@ -9,9 +9,9 @@ public class LightAttackState : State
 
     public override void OnStart()
     {
-        _playerAnimator.Play("Attack");
-        _playerAnimator.Update(0);
-        attackTime = _playerAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.length;
+        _animator.Play("Attack");
+        _animator.Update(0);
+        attackTime = _animator.GetCurrentAnimatorClipInfo(0)[0].clip.length;
         _renderer.color = Color.red;
     }
 

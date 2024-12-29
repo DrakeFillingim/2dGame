@@ -7,6 +7,7 @@ public class WalkState : State
 
     public override void OnStart()
     {
+        _animator.Play("Walk");
         _stats.MovementSpeed = WalkSpeed;
     }
 

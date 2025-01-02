@@ -5,18 +5,7 @@ public class IdleState : State
 {
     public override void OnStart()
     {
-        //_animator.SetInteger("State", (int)StateTypes.Idle);
-        //_animator.Update(0);
-        /*if (!_animator.IsInTransition(0))
-        {
-            _animator.Play("Idle");
-        }*/
-        _animator.Update(0);
-        if (_animator.IsInTransition(0))
-        {
-            Debug.Log("starting animation during transition");
-        }
-        _animator.CrossFade("Idle", 1f);
+        _animator.Play("Idle");
         if (_inputMap["ChargeAttack"].IsInProgress())
         {
             _controller.AddStateToQueue(new StateQueueData(new ChargeAttackState()));

@@ -17,12 +17,13 @@ public class StateController : MonoBehaviour
     /// </summary>
     private static readonly Dictionary<Type, Type[]> StateMap = new()
     {
-        { typeof(FallState), new Type[] { typeof(IdleState), typeof(JumpState), typeof(DashState), typeof(JumpAttackState) } },
-        { typeof(IdleState), new Type[] { typeof(FallState), typeof(JumpState), typeof(DashState), typeof(WalkState), typeof(CrouchState), 
+        { typeof(IdleState), new Type[] { typeof(FallState), typeof(JumpState), typeof(DashState), typeof(WalkState), typeof(CrouchState),
                                           typeof(RunState), typeof(LightAttackState), typeof(ChargeAttackState), typeof(ParryState) } },
+        { typeof(FallState), new Type[] { typeof(IdleState), typeof(JumpState), typeof(DashState), typeof(JumpAttackState) } },
         { typeof(JumpState), new Type[] { typeof(FallState), typeof(JumpState), typeof(DashState), typeof(JumpAttackState) } },
         { typeof(DashState), new Type[] { typeof(FallState), typeof(IdleState), typeof(WalkState), typeof(SlideState) } },
-        { typeof(WalkState), new Type[] { typeof(FallState), typeof(IdleState), typeof(JumpState), typeof(DashState), typeof(CrouchState), typeof(RunState), typeof(LightAttackState), typeof(ChargeAttackState) } },
+        { typeof(WalkState), new Type[] { typeof(FallState), typeof(IdleState), typeof(JumpState), typeof(DashState), typeof(CrouchState),
+                                          typeof(RunState), typeof(LightAttackState), typeof(ChargeAttackState), typeof(ParryState) } },
         { typeof(CrouchState), new Type[] { typeof(FallState), typeof(IdleState), typeof(DashState), typeof(WalkState), typeof(RunState), typeof(LightAttackState), typeof(ChargeAttackState) } },
         { typeof(RunState), new Type[] { typeof(FallState), typeof(IdleState), typeof(JumpState), typeof(WalkState), typeof(SlideState), typeof(MovementAttackState), typeof(ChargeAttackState) } },
         { typeof(SlideState), new Type[] { typeof(FallState), typeof(JumpState), typeof(CrouchState), typeof(RunState) } },

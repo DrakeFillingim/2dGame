@@ -8,7 +8,7 @@ public abstract class WeightedCompositeNode : Node
     protected Node[] _childNodes;
     protected int _runningNode;
 
-    public WeightedCompositeNode(Node[] childNodes, Weight weightComponent = null) : base (weightComponent)
+    public WeightedCompositeNode(Node[] childNodes, Weight weightComponent) : base (weightComponent)
     {
         _childNodes = childNodes;
     }

@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 public class ParryState : State
 {
-    private static float? parryTime = .24f;
+    private static float? parryTime = .124f;
     private float _currentParryTime = 0;
 
     public override void OnStart()

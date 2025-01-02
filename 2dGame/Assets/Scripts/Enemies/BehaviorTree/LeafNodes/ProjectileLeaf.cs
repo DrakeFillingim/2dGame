@@ -11,11 +11,6 @@ public class ProjectileLeaf : Node
     public override NodeStates Evaluate()
     {
         Debug.Log("in projectile: " + WeightComponent.Value);
-        if (!run)
-        {
-            WeightComponent.OnSuccess();
-            run = true;
-        }
         return NodeStates.Success;
     }
 }

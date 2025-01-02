@@ -62,4 +62,9 @@ public class WalkState : State
     {
         _controller.AddStateToQueue(new StateQueueData(new ChargeAttackState()));
     }
+
+    protected override void OnParry(InputAction.CallbackContext context)
+    {
+        _controller.AddStateToQueue(new StateQueueData(new ParryState()));
+    }
 }

@@ -19,10 +19,7 @@ public class DashState : State
         _inputMap["Move"].Disable();
         _movement.CheckMoveInput();
 
-        if(_renderer.flipX)
-        {
-            _direction = -1;
-        }
+        _direction = (int)_player.transform.localScale.x;
         _startPosition = _player.transform.position;
 
         _rb.velocity = Vector2.zero;

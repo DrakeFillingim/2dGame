@@ -82,10 +82,7 @@ public class ChargeAttackState : State
         _stats.ApplyGravity = false;
 
         _performed = true;
-        if (_renderer.flipX)
-        {
-            _direction = -1;
-        }
+        _direction = (int)_player.transform.localScale.x;
     }
 
     protected override void OnJump(InputAction.CallbackContext context)

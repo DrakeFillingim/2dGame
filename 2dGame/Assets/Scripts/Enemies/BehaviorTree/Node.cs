@@ -24,7 +24,7 @@ public abstract class Node
         WeightComponent = weightComponent;
         if (WeightComponent != null)
         {
-            NodeSuccess += WeightComponent.OnSuccess;
+            NodeSuccess += WeightComponent.OnNodeSuccess;
         }
     }
 
@@ -42,6 +42,9 @@ public abstract class Node
 
     public class Weight
     {
+        /// <summary>
+        /// Current weight of the node. Always between _baseWeight and 1.
+        /// </summary>
         private float _value = 0;
         /// <summary>
         /// Cost of successfully running the node.
@@ -115,7 +118,7 @@ public abstract class Node
         /// Subtracts the correct weight every time the node is successfully run
         /// and sets the last time the node weight was updated to the current time.
         /// </summary>
-        public void OnSuccess()
+        public void OnNodeSuccess()
         {
             Value += _actionWeight;
             _updateTime = Time.time;

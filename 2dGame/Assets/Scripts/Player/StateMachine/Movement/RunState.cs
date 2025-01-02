@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+//coroutine to listen for slide input, allow to transition back to walk immediately
 public class RunState : State
 {
     public const float RunSpeed = 15;

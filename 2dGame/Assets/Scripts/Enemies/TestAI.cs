@@ -10,7 +10,6 @@ public class TestAI : MonoBehaviour
     private System.Func<float, float, float> _dashCurve = Easings.EaseOutCubic;
     private System.Func<int> _getDirection;
 
-    private Rigidbody2D _rb;
     private SpriteRenderer _renderer;
     private Transform _player;
         
@@ -21,44 +20,57 @@ public class TestAI : MonoBehaviour
     private bool _playerAttacking = false;
     private Timer _playerAttackTimer;
 
-    
     private void Start()
     {
-        _getDirection = () => _direction * -1;
-        _rb = GetComponent<Rigidbody2D>();
+        _getDirection = () => _direction;
         _renderer = GetComponent<SpriteRenderer>();
         _player = GameObject.Find("Player").transform;
 
-        parryLeaf = new ParryLeaf(new Node.Weight(.3f, decrementTime: 3, lerpWeight: false));
+        parryLeaf = new ParryLeaf("Parry", gameObject, new Node.Weight(.3f, decrementTime: 3, lerpWeight: false));
         parryLeaf.NodeSuccess += () => _playerAttacking = false;
 
-        dashLeaf = new DashLeaf(DashDistance, DashTime, _dashCurve, _getDirection, _rb, new Node.Weight(1, 0.5f, lerpWeight: false));
-         
-        _root = new PrioritizedSequenceNode(new Node[] {
-            new CheckBoolLeaf(() => _playerAttacking),
-            new InverterNode(
-                new CheckFloatLeaf(() => (_player.position - transform.position).sqrMagnitude, 9)
-            ),
-            new WeightedSelectorNode(new Node[] {
-                parryLeaf,
-                dashLeaf
-            })
+        dashLeaf = new DashLeaf(DashDistance, DashTime, _dashCurve, _getDirection, "Dash", gameObject, new Node.Weight(1, 0.5f, lerpWeight: false));
+
+        _root = new PrioritizedSelectorNode(new Node[]
+        {
+            new PrioritizedSequenceNode(new Node[]
+            {
+                new InverterNode(new CheckFloatLeaf(() => (_player.position - transform.position).sqrMagnitude, 9)),
+                new PrioritizedSelectorNode(new Node[]
+                {
+                    new PrioritizedSequenceNode(new Node[]
+                    {
+                        new CheckBoolLeaf(() => _playerAttacking),
+                        new WeightedSelectorNode(new Node[]
+                        {
+                            parryLeaf,
+                            dashLeaf,
+                        }),
+                    }),
+                    new PrioritizedSequenceNode(new Node[]
+                    {
+                        new LightAttackLeaf("Attack 1", () => _playerAttacking, gameObject),
+                        new LightAttackLeaf("Attack 2", () => _playerAttacking, gameObject),
+                    }),
+                }),
+            }),
+            new IdleLeaf("Idle", gameObject),
         });
 
-        _playerAttackTimer = Timer.CreateTimer(gameObject, "Player Attack Timer", () => _playerAttacking = false, .3f);
+        _playerAttackTimer = Timer.CreateTimer(gameObject, "Player Attack Timer", () => _playerAttacking = false, .2f);
         GameObject.Find("Player").GetComponent<StateController>().PlayerStateChange += OnPlayerStateChange;
     }
 
     private void FixedUpdate()
     {
-        if (_player.position.x > transform.position.x)
+        if (transform.position.x >= _player.position.x)
         {
-            _renderer.flipX = false;
+            transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
             _direction = 1;
         }
         else
         {
-            _renderer.flipX = true;
+            transform.localScale = new Vector3(-Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
             _direction = -1;
         }
         _root.Evaluate();

@@ -10,35 +10,27 @@ public class DashLeaf : LeafNode
     private int _direction;
 
     private Rigidbody2D _rb;
-    private Animator _animator;
+    private int _animationHash;
 
     private Vector2 _startPosition;
     private bool _firstFrame = true;
 
-    public DashLeaf(float dashDistance, float dashTime, System.Func<float, float, float> dashCurve, System.Func<int> direction, GameObject agent, Weight weightComponent) : base(agent, weightComponent)
+    public DashLeaf(float dashDistance, float dashTime, System.Func<float, float, float> dashCurve, System.Func<int> direction,
+        string animationName, GameObject agent, Weight weightComponent = null) : base(agent, weightComponent)
     {
         _dashDistance = dashDistance;
         _dashTime = dashTime;
         _dashCurve = dashCurve;
         _getDirection = direction;
         _rb = agent.GetComponent<Rigidbody2D>();
-        _animator = agent.GetComponent<Animator>();
+        _animationHash = Animator.StringToHash(animationName);
     }
-
-    /*public DashLeaf(float dashDistance, float dashTime, System.Func<float, float, float> dashCurve, System.Func<int> direction, Rigidbody2D rb, Weight weightComponent = null) : base(weightComponent)
-    {
-        _dashDistance = dashDistance;
-        _dashTime = dashTime;
-        _dashCurve = dashCurve;
-        _getDirection = direction;
-        _rb = rb;
-    }*/
 
     public override NodeStates Evaluate()
     {
         if (_firstFrame)
         {
-            _animator.Play("Dash");
+            _animator.Play(_animationHash);
             _direction = _getDirection();
             _startPosition = _rb.transform.position;
             _firstFrame = false;

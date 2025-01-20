@@ -4,16 +4,17 @@ using UnityEngine;
 public class SensorLayer : MonoBehaviour
 {
     public event Action PlayerAttack;
+    public event Action PlayerEntersRange;
     
     private Transform _player;
 
+    private bool broadcasted = false;
 
     private void Start()
     {
         GameObject player = GameObject.Find("Player");
         _player = player.transform;
         player.GetComponent<StateController>().PlayerStateChange += OnPlayerStateChange;
-        PlayerAttack += OnPlayerAttack;
     }
 
     private void Update()
@@ -23,7 +24,11 @@ public class SensorLayer : MonoBehaviour
 
     private void FixedUpdate()
     {
-        
+        if ((_player.position - transform.position).sqrMagnitude < 9 && !broadcasted)
+        {
+            broadcasted = true;
+            PlayerEntersRange?.Invoke();
+        }
     }
 
     private void OnPlayerStateChange(Type newState)
@@ -35,10 +40,5 @@ public class SensorLayer : MonoBehaviour
                 PlayerAttack?.Invoke();
             }
         }
-    }
-
-    private void OnPlayerAttack()
-    {
-        print("player attack");
     }
 }

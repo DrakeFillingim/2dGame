@@ -8,6 +8,8 @@ public class BlockState : State
 
     public override void OnStart()
     {
+        _stats.CombatState = DamageHandler.CombatStates.Blocking;
+
         _stats.MovementSpeed = BlockSpeed;
         _animator.SetInteger("State", (int)StateTypes.Block);
         _animator.Play("Block");
@@ -26,6 +28,6 @@ public class BlockState : State
 
     public override void OnExit()
     {
-
+        _stats.CombatState = DamageHandler.CombatStates.Undefended;
     }
 }

@@ -2,27 +2,36 @@ using UnityEngine;
 
 public class EnemyAttack : EnemyState
 {
-    private Animator _animator;
+    private AttackComponent _attackComponent;
     private int _animationHash;
 
     private bool canTransition = true;
 
+    private const float AttackTime = .4f;
+    private float _currentAttackTime = 0;
+
     public EnemyAttack(GameObject agent, string attackName)
     {
-        _animator = agent.GetComponent<Animator>();
         _animationHash = Animator.StringToHash(attackName);
+        _attackComponent = agent.GetComponent<AttackComponent>();
 
         agent.GetComponent<SensorLayer>().PlayerAttack += OnPlayerAttack;
+        agent.GetComponent<EntityStats>().Parried += OnPlayerParry;
     }
 
     public override void OnEnter()
     {
-        _animator.Play(_animationHash);
+        _attackComponent.StartAttack(_animationHash);
     }
 
     public override void OnUpdate()
     {
         Debug.Log("in attack");
+        _currentAttackTime += Time.deltaTime;
+        if (_currentAttackTime > AttackTime)
+        {
+            _onStateFinish?.Invoke();
+        }
     }
 
     public override void OnFixedUpdate()
@@ -32,7 +41,7 @@ public class EnemyAttack : EnemyState
 
     public override void OnExit()
     {
-
+        _currentAttackTime = 0;
     }
 
     protected override void OnPlayerAttack()
@@ -47,5 +56,10 @@ public class EnemyAttack : EnemyState
     protected override void OnTakeDamage()
     {
         
+    }
+
+    protected override void OnPlayerParry()
+    {
+        _onPlayerParry?.Invoke();
     }
 }

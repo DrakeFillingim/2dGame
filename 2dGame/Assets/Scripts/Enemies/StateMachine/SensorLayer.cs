@@ -5,6 +5,7 @@ public class SensorLayer : MonoBehaviour
 {
     public event Action PlayerAttack;
     public event Action PlayerEntersRange;
+    public event Action Parried;
     
     private Transform _player;
 
@@ -28,6 +29,10 @@ public class SensorLayer : MonoBehaviour
         {
             broadcasted = true;
             PlayerEntersRange?.Invoke();
+        }
+        if ((_player.position - transform.position).sqrMagnitude > 9)
+        {
+            broadcasted = false;
         }
     }
 

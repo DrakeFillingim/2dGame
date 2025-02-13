@@ -1,17 +1,14 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class LightAttackState : State
 {
     //replace with animation timing?
-    private static float attackTime = 1f;
+    private static float attackTime = .4f;
     private float _currentAttackTime = 0;
 
     public override void OnStart()
     {
-        _animator.Play("Attack");
-        _animator.Update(0);
-        attackTime = _animator.GetCurrentAnimatorClipInfo(0)[0].clip.length;
+        _player.GetComponent<AttackComponent>().StartAttack(Animator.StringToHash("Attack"));
         _renderer.color = Color.red;
     }
 
@@ -32,5 +29,6 @@ public class LightAttackState : State
     public override void OnExit()
     {
         _renderer.color = Color.white;
+        _currentAttackTime = 0;
     }
 }

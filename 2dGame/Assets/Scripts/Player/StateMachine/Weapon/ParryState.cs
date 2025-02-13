@@ -3,11 +3,13 @@ using UnityEngine.InputSystem;
 
 public class ParryState : State
 {
-    private static float? parryTime = .124f;
+    private static float? parryTime = .25f;
     private float _currentParryTime = 0;
 
     public override void OnStart()
     {
+        _stats.CombatState = DamageHandler.CombatStates.Parrying;
+
         _animator.Play("Parry");
         if (parryTime == null)
         {
@@ -34,6 +36,7 @@ public class ParryState : State
 
     public override void OnExit()
     {
+        _stats.CombatState = DamageHandler.CombatStates.Undefended;
         _inputMap["Parry"].canceled -= OnParryCanceled;
     }
 

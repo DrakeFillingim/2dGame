@@ -1,11 +1,17 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyIdle : EnemyState
+public class EnemyWait : EnemyState
 {
     private Animator _animator;
     private int _animationHash;
 
-    public EnemyIdle(GameObject agent, string animationName)
+
+    private const float WaitTime = 1;
+    private float _currentWaitTime = 0;
+
+    public EnemyWait(GameObject agent, string animationName)
     {
         _animator = agent.GetComponent<Animator>();
         _animationHash = Animator.StringToHash(animationName);
@@ -20,11 +26,10 @@ public class EnemyIdle : EnemyState
 
     public override void OnUpdate()
     {
-        Debug.Log("in idle");
-    }
-
-    protected override void OnPlayerEntersRange()
-    {
-        _onPlayerEntersRange?.Invoke();
+        _currentWaitTime += Time.deltaTime;
+        if (_currentWaitTime > WaitTime)
+        {
+            _onStateFinish?.Invoke();
+        }
     }
 }

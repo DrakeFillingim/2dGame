@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
     private InputActionMap _inputMap;
-    private Rigidbody2D _rb;
+    private Rigidbody2D _rb;    
     private PlayerStats _stats;
     private SpriteRenderer _renderer;
 

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerStats : MonoBehaviour
+public class PlayerStats : EntityStats
 {
     /*public const float WalkSpeed = 5;
     public const float CrouchSpeed = 3;
@@ -42,6 +42,27 @@ public class PlayerStats : MonoBehaviour
 
     public void Start()
     {
-        CanDash = Timer.CreateTimer(gameObject, "Dash Cooldown", () => { }, DashCooldown);
+        //CanDash = Timer.CreateTimer(gameObject, "Dash Cooldown", () => { }, DashCooldown);
+    }
+
+    public override void OnParried(float staminaDamage)
+    {
+
+    }
+
+    public override void OnParryAttack(float staminaDamage)
+    {
+        Stamina += staminaDamage;
+    }
+
+    public override void OnBlockAttack(float staminaDamage)
+    {
+        Stamina += staminaDamage;
+    }
+
+    public override void OnHitByAttack(float healthDamage, float staminaDamage)
+    {
+        Health -= healthDamage;
+        Stamina += staminaDamage;
     }
 }

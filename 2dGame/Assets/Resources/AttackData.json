@@ -1,0 +1,33 @@
+{
+  "Attacks": [
+    {
+      "Name": "Attack 1",
+      "Weapons": [
+        {
+          "Name": "Sword",
+          "Damage": 1,
+          "StaminaDamage": 1,
+          "ParryDamage": 2
+        },
+        {
+          "Name": "Left Foot",
+          "Damage": 2,
+          "StaminaDamage": 3,
+          "ParryDamage": 1
+        }
+      ]
+    },
+    {
+      "Name": "Attack 2",
+      "Weapons": [
+        {
+          "Name": "Sword",
+          "Damage": 5,
+          "StaminaDamage": 2,
+          "ParryDamage": 0.5
+        }
+      ]
+    }
+  ]
+
+}
